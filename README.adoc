@@ -1,0 +1,10 @@
+= mychichair.com
+
+== Launch the site with Docker
+Build the docker image +
+`docker build -t ekougs/mychichair.com:1.0 .` +
+
+Run it +
+`docker run --name mychichair.com -p 8787:80 -d ekougs/mychichair.com:1.0`
+
+You can now see it on `http://localhost:8787`
