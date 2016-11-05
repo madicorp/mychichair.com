@@ -1,0 +1,16 @@
+.brand {
+    font-family: 'Pacifico', cursive;
+    padding-top: 0.5em;
+}
+
+a.brand, a.brand:hover, a.brand:visited {
+    color: #fefefe;
+}
+
+.brand-big {
+    font-size: 3em;
+}
+
+p.copyright a, p.copyright a:hover, p.copyright a:focus {
+    color: #5cb85c;
+}
