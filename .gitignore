@@ -1,1 +1,8 @@
+# IDE
 .idea
+
+# Local DB
+*.sqlite3
+
+# Python
+venv

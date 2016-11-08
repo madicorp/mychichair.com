@@ -14,3 +14,18 @@ a.brand, a.brand:hover, a.brand:visited {
 p.copyright a, p.copyright a:hover, p.copyright a:focus {
     color: #5cb85c;
 }
+
+.slides .ion-social-facebook, .slides .ion-social-instagram {
+    color: #fefefe;
+    font-size: 2.5em;
+    margin-right: .5em;
+    margin-left: .5em;
+    margin-bottom: 1em;
+}
+
+.textslider h1,
+.textslider h2,
+.textslider h3 {
+    margin-top: 1em;
+    margin-bottom: .5em;
+}

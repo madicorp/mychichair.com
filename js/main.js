@@ -139,7 +139,7 @@
 
         /* FULLPAGE */
         $('#fullpage').fullpage({
-                                    anchors: ['firstPage', 'secondPage', '3rdPage', '4thPage', 'lastPage'],
+                                    anchors: ['firstPage', 'secondPage', '3rdPage', 'lastPage'],
                                     menu: '#menu',
                                     scrollingSpeed: 800,
                                     autoScrolling: true,
@@ -170,7 +170,7 @@
         function initPageBackground() {
             if ($('body').hasClass('image-background')) { // IMAGE BACKGROUND
 
-                $("body").backstretch("demo/background/image-1.jpg");
+                $("body").backstretch("/images/background.jpeg");
 
             } else if ($('body').hasClass('slideshow-background')) { // SLIDESHOW BACKGROUND
 
