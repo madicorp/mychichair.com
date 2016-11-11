@@ -13,7 +13,7 @@ def _build_web_container():
 
 
 def _run_web_container():
-    local("docker-compose up")
+    local("docker-compose up -d")
 
 
 def launch_local():

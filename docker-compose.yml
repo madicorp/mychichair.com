@@ -17,7 +17,7 @@ mychichair-web:
   build: .
   dockerfile: ./docker/nginx/Dockerfile
   ports:
-    - "8787:80"
+    - "80:80"
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock:ro
   volumes_from:

@@ -29,3 +29,49 @@ p.copyright a, p.copyright a:hover, p.copyright a:focus {
     margin-top: 1em;
     margin-bottom: .5em;
 }
+
+.home .slide-content .flexslider {
+    margin-top: 2em;
+    margin-bottom: 4em;
+}
+
+span.brand {
+    margin: 0 0.3em;
+}
+
+.section .slide-content {
+    font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+    header a.brand {
+        font-size: 2em;
+    }
+
+    .slide-content p.lead {
+        font-size: 1em;
+    }
+
+    .slide-content a.border-button {
+        padding: 10px 40px;
+    }
+
+    nav.socials-icons {
+        background: transparent;
+    }
+
+    nav.socials-icons li {
+        display: inline-block !important;
+    }
+
+    nav.socials-icons li a i {
+        color: #fefefe;
+        font-size: 4em;
+    }
+
+    footer.site-footer {
+        color: #fefefe;
+    }
+}
+
+

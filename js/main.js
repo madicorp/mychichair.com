@@ -162,8 +162,7 @@
             $('#main-nav a').on('click', function () {
                 $('.navbar-toggle').trigger('click');
             });
-        }
-        ;
+        };
 
 
         /* BACKGROUNDS */
