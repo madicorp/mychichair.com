@@ -2,6 +2,8 @@ FROM tutum/nginx
 
 RUN rm /etc/nginx/sites-enabled/default
 ADD docker/nginx/sites-enabled/ /etc/nginx/sites-enabled
+RUN rm /etc/nginx/nginx.conf
+ADD docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./index.html /usr/share/nginx/html
 ADD ./js/ /usr/share/nginx/html/js
 ADD ./images/ /usr/share/nginx/html/images
