@@ -43,6 +43,10 @@ span.brand {
     font-size: 1.2em;
 }
 
+.image-background {
+    filter: grayscale(40%);
+}
+
 @media (max-width: 768px) {
     header a.brand {
         font-size: 2em;

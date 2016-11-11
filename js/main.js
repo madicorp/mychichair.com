@@ -162,7 +162,7 @@
             $('#main-nav a').on('click', function () {
                 $('.navbar-toggle').trigger('click');
             });
-        };
+        }
 
 
         /* BACKGROUNDS */
@@ -247,7 +247,7 @@
             }
         }
 
-        initPageBackground();
+        setTimeout(initPageBackground, 10);
 
 
         /* RESPONSIVE VIDEO - FITVIDS */
@@ -413,3 +413,13 @@
     //END DOCUMENT.READY FUNCTION
 
 })(jQuery);
+
+function openSocialNetworkLink(appLink, httpLink) {
+    // If the app is present, then the app link will be used, otherwise it will open the http link
+    setTimeout(function () {
+        window.location = httpLink;
+    }, 25);
+    if (!!appLink) {
+        window.location = appLink;
+    }
+}

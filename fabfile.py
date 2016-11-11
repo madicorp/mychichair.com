@@ -23,7 +23,7 @@ def launch_local():
         _run_web_container()
 
 
-def launch_prod_locally(contact_email, contact_email_pwd):
+def launch_prod_local(contact_email, contact_email_pwd):
     _stop_and_remove_containers()
     _build_web_container()
     with shell_env(DJANGO_SETTINGS_MODULE="mychichair.settings.prod", CONTACT_EMAIL=contact_email,
