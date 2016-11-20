@@ -139,7 +139,7 @@
 
         /* FULLPAGE */
         $('#fullpage').fullpage({
-                                    anchors: ['firstPage', 'secondPage', '3rdPage', '4thPage', 'lastPage'],
+                                    anchors: ['firstPage', 'secondPage', '3rdPage', 'lastPage'],
                                     menu: '#menu',
                                     scrollingSpeed: 800,
                                     autoScrolling: true,
@@ -163,14 +163,13 @@
                 $('.navbar-toggle').trigger('click');
             });
         }
-        ;
 
 
         /* BACKGROUNDS */
         function initPageBackground() {
             if ($('body').hasClass('image-background')) { // IMAGE BACKGROUND
 
-                $("body").backstretch("demo/background/image-1.jpg");
+                $("body").backstretch("/images/background.jpeg");
 
             } else if ($('body').hasClass('slideshow-background')) { // SLIDESHOW BACKGROUND
 
@@ -248,7 +247,7 @@
             }
         }
 
-        initPageBackground();
+        setTimeout(initPageBackground, 10);
 
 
         /* RESPONSIVE VIDEO - FITVIDS */
@@ -414,3 +413,13 @@
     //END DOCUMENT.READY FUNCTION
 
 })(jQuery);
+
+function openSocialNetworkLink(appLink, httpLink) {
+    // If the app is present, then the app link will be used, otherwise it will open the http link
+    setTimeout(function () {
+        window.location = httpLink;
+    }, 25);
+    if (!!appLink) {
+        window.location = appLink;
+    }
+}

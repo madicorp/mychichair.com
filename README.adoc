@@ -1,0 +1,27 @@
+= mychichair.com
+
+== Prerequisites
+Docker
+Python 3.4
+Create a virtual env (venv) at the base directory
+
+
+== Launch the site with Docker locally
+`fab launch_local`
+You can now see it on `http://localhost`
+Contacts are printed in python console
+
+
+== Launch the site with prod settings locally
+`fab launch_prod_local:$email,$email_pwd`
+You can now see it on `http://localhost`
+Contacts are actually sent
+
+
+== Deploy on digital ocean
+First create the docker machine linked to digital ocean droplet
+Before deploying, activate docker machine
+`eval $(docker-machine env mychichair.com)`
+Then
+`fab launch_prod_digital_ocean:$email,$email_pwd`
+mychichair.com docker-machine activation is checked before

@@ -1,0 +1,10 @@
+venv
+.idea
+*.sqlite3
+README.adoc
+fabfile.py
+.gitignore
+.git
+docker-compose.yml
+__pycache__/
+.DS_Store

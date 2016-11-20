@@ -1,1 +1,13 @@
+# IDE
 .idea
+
+# Local DB
+*.sqlite3
+
+# Python
+venv
+__pycache__/
+
+# MacOS
+.DS_Store
+
