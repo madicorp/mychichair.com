@@ -11,3 +11,13 @@ __pycache__/
 # MacOS
 .DS_Store
 
+# Django mychichair
+media
+*.sqlite
+/static/
+build/
+dist/
+
+# npm
+node_modules
+mychichair/static/assets/

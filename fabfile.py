@@ -20,10 +20,7 @@ def _run_web_container():
 
 
 def launch_local():
-    _build_web_container()
-    _stop_and_remove_containers()
-    with shell_env(DJANGO_SETTINGS_MODULE="mychichair.settings.local"):
-        _run_web_container()
+    local("./docker/mychichair/docker-entrypoint.sh")
 
 
 def launch_prod_local(contact_email, contact_email_pwd):

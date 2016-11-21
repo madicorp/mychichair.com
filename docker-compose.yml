@@ -1,26 +1,30 @@
-mychichair-django:
-  restart: always
-  build: .
-  dockerfile: ./docker/django/Dockerfile
-  expose:
-    - "8000"
-  volumes:
-    - /usr/src/mychichair
-  environment:
-    - DJANGO_SETTINGS_MODULE
-    - CONTACT_EMAIL
-    - CONTACT_EMAIL_PASSWORD
-  command: ./docker/django/launch_server.sh
+version '2'
 
-mychichair-web:
-  restart: always
-  build: .
-  dockerfile: ./docker/nginx/Dockerfile
-  ports:
-    - "80:80"
-  volumes:
-    - /var/run/docker.sock:/tmp/docker.sock:ro
-  volumes_from:
-    - mychichair-django
-  links:
-    - mychichair-django:web
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - '5432:5432'
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  mychichair:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DATABASE_URL=postgres://saleor:saleor@db/saleor
+      - DEFAULT_FROM_EMAIL=noreply@example.com
+      - OPENEXCHANGERATES_API_KEY
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=changeme
+    links:
+      - db
+      - redis
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/app:Z
