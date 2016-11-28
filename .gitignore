@@ -11,3 +11,6 @@ __pycache__/
 # MacOS
 .DS_Store
 
+*.sqlite*
+node_modules
+media

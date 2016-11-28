@@ -1,6 +1,6 @@
 venv
 .idea
-*.sqlite3
+*.sqlite*
 README.adoc
 fabfile.py
 .gitignore
@@ -8,3 +8,5 @@ fabfile.py
 docker-compose.yml
 __pycache__/
 .DS_Store
+node_modules
+media

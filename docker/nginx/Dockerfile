@@ -10,3 +10,7 @@ ADD ./images/ /usr/share/nginx/html/images
 ADD ./fonts/ /usr/share/nginx/html/fonts
 ADD ./css/ /usr/share/nginx/html/css
 
+RUN chmod -R g+w /var/lib/nginx
+RUN chgrp -R www-data var/lib/nginx/
+RUN usermod -a -G www-data root
+USER www-data
