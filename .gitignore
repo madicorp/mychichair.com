@@ -18,6 +18,13 @@ media
 build/
 dist/
 
+# shared dir
+data
+log
+
 # npm
 node_modules
 mychichair/static/assets/
+
+# Generated
+docker-compose.yml

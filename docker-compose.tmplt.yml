@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+  db:
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - 5432:5432
+    volumes:
+      - $DATA_DIR/postgresql:/var/lib/postgresql/data/
+      - $LOG_DIR/postgresql:/var/log/postgresql
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - $DATA_DIR/redis:/data
+      - $LOG_DIR/redis:/var/log/redis
+
+  mychichair:
+    restart: always
+    build:
+      context: .
+    command: ./docker/mychichair/docker-entrypoint.sh
+    volumes:
+      - /usr/src/mychichair/static
+      - $MEDIA_DIR:/usr/src/mychichair/media
+      - $LOG_DIR/mychichair:/var/log/mychichair
+    environment:
+      - DATABASE_URL
+      - DEFAULT_FROM_EMAIL
+      - OPENEXCHANGERATES_API_KEY
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY
+      - DEBUG
+      - ALLOWED_HOSTS
+      - CONTACT_EMAIL
+      - CONTACT_EMAIL_PASSWORD
+
+    links:
+      - db
+      - redis
+    ports:
+      - 8000:8000
+
+  nginx:
+    restart: always
+    build: ./docker/nginx/
+    ports:
+      - 80:8080
+    volumes:
+      - $MEDIA_DIR:/www/media
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - $LOG_DIR/nginx:/var/log/nginx
+    volumes_from:
+      - mychichair
+    links:
+      - mychichair:web

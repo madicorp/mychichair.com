@@ -5,9 +5,8 @@ import os.path
 
 import dj_database_url
 import dj_email_url
-from django.contrib.messages import constants as messages
 import django_cache_url
-
+from django.contrib.messages import constants as messages
 
 DEBUG = ast.literal_eval(os.environ.get('DEBUG', 'True'))
 if DEBUG:
@@ -42,13 +41,11 @@ SQLITE_DB_URL = 'sqlite:///' + os.path.join(PROJECT_ROOT, 'dev.sqlite')
 DATABASES = {
     'default': dj_database_url.config(default=SQLITE_DB_URL, conn_max_age=600)}
 
-
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
 
 EMAIL_URL = os.environ.get('EMAIL_URL')
 SENDGRID_USERNAME = os.environ.get('SENDGRID_USERNAME')
@@ -69,7 +66,6 @@ EMAIL_USE_SSL = email_config['EMAIL_USE_SSL']
 
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 ORDER_FROM_EMAIL = os.getenv('ORDER_FROM_EMAIL', DEFAULT_FROM_EMAIL)
-
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
@@ -143,6 +139,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.auth',
+    'compressor',
 
     # Local apps
     'mychichair.userprofile',
@@ -309,3 +306,6 @@ WEBPACK_LOADER = {
         'IGNORE': [
             r'.+\.hot-update\.js',
             r'.+\.map']}}
+
+COMPRESS_ENABLED = not DEBUG
+COMPRESS_OFFLINE = COMPRESS_ENABLED
