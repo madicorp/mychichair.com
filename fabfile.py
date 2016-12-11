@@ -38,7 +38,8 @@ def launch_local():
 
 def launch_prod_local(contact_email, contact_email_pwd, admin_name=_default_admin_name,
                       admin_email=_default_admin_email, postgres_user='admin', postgre_pwd=_default_pwd,
-                      secret_key=_default_pwd, media_dir='./media', data_dir='./data', log_dir='./log'):
+                      secret_key=_default_pwd, media_dir='./media', data_dir='./data', log_dir='./log',
+                      populatedb=False):
     _build_docker_compose_file(media_dir, data_dir, log_dir)
     _build_web_container()
     _stop_and_remove_containers()
@@ -52,6 +53,7 @@ def launch_prod_local(contact_email, contact_email_pwd, admin_name=_default_admi
     os.environ['SECRET_KEY'] = secret_key
     os.environ['DEBUG'] = 'False'
     os.environ['ALLOWED_HOSTS'] = 'mychichair.com'
+    os.environ['POPULATE_DB'] = populatedb
     local("docker-compose up -d")
 
 
@@ -80,7 +82,7 @@ def _is_my_chic_hair_com_active():
 
 
 def launch_prod_digital_ocean(contact_email, contact_email_pwd, admin_name, admin_email, postgres_user,
-                              postgre_pwd, secret_key):
+                              postgre_pwd, secret_key, populatedb=False):
     if _is_my_chic_hair_com_active():
         launch_prod_local(contact_email, contact_email_pwd, admin_name, admin_email, postgres_user, postgre_pwd,
-                          secret_key, '{}/mychichair/media'.format(_data_dir), _data_dir, _log_dir)
+                          secret_key, '{}/mychichair/media'.format(_data_dir), _data_dir, _log_dir, populatedb)
