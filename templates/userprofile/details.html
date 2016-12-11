@@ -1,28 +1,33 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Your profile" %} — {{ block.super }}{% endblock %}
+{% block title %}{% trans "Votre profil" %} — {{ block.super }}{% endblock %}
 
 {% block breadcrumb %}
-    {{ block.super }}
-    <li><a href="{% url 'profile:details' %}">{% trans "Your profile" %}</a></li>
+    <li class="m_right_10 current">
+        <a href="/" class="default_t_color">
+            {% trans "Accueil" %}
+            <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+        </a>
+    </li>
+    <li><a href="{% url 'profile:details' %}" class="default_t_color">{% trans "Votre profil" %}</a></li>
 {% endblock breadcrumb %}
 
 {% block content %}
-    <h2>{% trans "Profile" %}</h2>
+    <h2>{% trans "Profil" %}</h2>
     <p>
-        <a href="{% url 'registration:change_password' %}" class="btn btn-default">{% trans 'Change your password' %}</a>
-        <a href="{% url 'registration:request_email_change' %}" class="btn btn-default">{% trans 'Change your email address' %}</a>
+        <a href="{% url 'registration:change_password' %}" class="btn button_type_6 bg_scheme_color f_size_large r_corners tr_all_hover color_light m_bottom_20">{% trans "Changer son mot de passe" %}</a>
+        <a href="{% url 'registration:request_email_change' %}" class="btn button_type_6 bg_scheme_color f_size_large r_corners tr_all_hover color_light m_bottom_20">{% trans "Changer son adresse email" %}</a>
     </p>
 
 
-    <h3>{% trans "Your address book" %}</h3>
+    <h3>Vos adresses</h3>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th class="col-sm-6">{% trans "Addressee" %}</th>
-                <th class="col-sm-2">{% trans "Billing" %}</th>
-                <th class="col-sm-2">{% trans "Shipping" %}</th>
+                <th class="col-sm-6">{% trans "Destinataire" %}</th>
+                <th class="col-sm-2">{% trans "Facturation" %}</th>
+                <th class="col-sm-2">{% trans "Livraison" %}</th>
                 <th class="col-sm-2"></th>
             </tr>
         </thead>
@@ -34,27 +39,27 @@
                 </th>
                 <td class="col-sm-2">
                     {% if user.default_billing_address == address %}
-                    <span class="label label-default">{% trans "Default" %}</span>
+                    <span class="label label-default">{% trans "Par d&eacute;faut" %}</span>
                     {% else %}
                     <form method="post" action="{% url "profile:address-make-default" pk=address.pk purpose="billing" %}" class="form-inline form-horizontal" novalidate>
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-default btn-sm">{% trans "Make default" %}</button>
+                        <button type="submit" class="btn btn-sm button_type_6 bg_scheme_color r_corners tr_all_hover color_light m_bottom_20">{% trans "Mettre par d&eacute;faut" %}</button>
                     </form>
                     {% endif %}
                 </td>
                 <td class="col-sm-2">
                     {% if user.default_shipping_address == address %}
-                    <span class="label label-default">{% trans "Default" %}</span>
+                    <span class="label label-default">{% trans "Par d&eacute;faut" %}</span>
                     {% else %}
                     <form method="post" action="{% url "profile:address-make-default" pk=address.pk purpose="shipping" %}" class="form-inline form-horizontal" novalidate>
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-default btn-sm">{% trans "Make default" %}</button>
+                        <button type="submit" class="btn btn-sm button_type_6 bg_scheme_color r_corners tr_all_hover color_light m_bottom_20">{% trans "Mettre par d&eacute;faut" %}</button>
                     </form>
                     {% endif %}
                 </td>
                 <td class="col-sm-2">
-                    <a href="{% url 'profile:address-edit' pk=address.pk %}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i> {% trans "Edit" %}</a>
-                    <a href="{% url 'profile:address-delete' pk=address.pk %}" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove"></i> {% trans "Delete" %}</a>
+                    <a href="{% url 'profile:address-edit' pk=address.pk %}" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-edit"></i> {% trans "Editer" %}</a>
+                    <a href="{% url 'profile:address-delete' pk=address.pk %}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i> {% trans "Supprimer" %}</a>
                 </td>
             </tr>
             {% endfor %}
@@ -62,7 +67,7 @@
     </table>
 
     <div>
-        <a href="{% url 'profile:address-create' %}" class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> {% trans "Add new address" %}</a>
+        <a href="{% url 'profile:address-create' %}" class="btn button_type_6 bg_scheme_color f_size_large r_corners tr_all_hover color_light m_bottom_20"><i class="glyphicon glyphicon-plus-sign"></i> {% trans "Ajouter une adresse" %}</a>
     </div>
 
 

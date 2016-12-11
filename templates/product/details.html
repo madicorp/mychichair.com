@@ -2,6 +2,7 @@
 
 {% load bootstrap_form from bootstrap3 %}
 {% load i18n %}
+{% load compress %}
 {% load gross from prices_i18n %}
 {% load markdown from markdown %}
 {% load price_range from price_ranges %}
@@ -10,126 +11,267 @@
 {% block title %}{{ product }} — {{ block.super }}{% endblock %}
 
 {% block breadcrumb %}
-    {{ block.super }}
+    <li class="m_right_10 current">
+        <a href="/" class="default_t_color">
+            Accueil
+            <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+        </a>
+    </li>
     {% with product.get_first_category as category %}
-        {% if category %}
-            <li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
+        {% if category and not "Default" == category.name %}
+            <li class="m_right_10 current">
+                <a href="{{ category.get_absolute_url }}">
+                    {{ category }}
+                    <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+                </a>
+            </li>
         {% endif %}
     {% endwith %}
-    <li><a href="{{ product.get_absolute_url }}">{{ product }}</a></li>
+    <li><a href="{{ product.get_absolute_url }}" class="default_t_color">{{ product }}</a></li>
 {% endblock breadcrumb %}
 
 {% block outercontent %}
-{% if not is_visible %}
-    <div class="alert alert-warning" role="alert">
-        {% blocktrans with date=product.available_on|date %}<strong>Warning!</strong> You are previewing a product that will become visible on <strong>{{ date }}</strong>.{% endblocktrans %}
-    </div>
-{% endif %}
-<div itemscope itemtype="http://schema.org/Product">
-    <div class="row">
-        <div class="col-sm-6 col-sm-push-6">
-            <h1 itemprop="name">
-                {{ product }}
-            </h1>
-
-            {% if product.is_in_stock %}
-                <p class="lead" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <span class="price">{% price_range price_range %}</span>
-                    {% if discount %}
-                        <small class="price undiscounted text-muted">{% gross undiscounted_price_range.min_price html=True %}</small>
+    <div class="container">
+        <div class="clearfix m_bottom_30 t_xs_align_c">
+            <div class="photoframe type_2 shadow r_corners f_left f_sm_none d_xs_inline_b product_single_preview relative m_right_30 m_bottom_5 m_sm_bottom_20 m_xs_right_0 w_mxs_full">
+                {# TODO on sale #}
+                {# <span class="hot_stripe"><img src="images/sale_product.png" alt=""></span>#}
+                <div class="relative d_inline_b m_bottom_10 qv_preview d_xs_block">
+                    {% if product.images.first %}
+                        <img id="zoom_image" src="{{ product.images.first.image.crop.438x438 }}"
+                             data-zoom-image="{{ product.images.first.image.url }}" class="tr_all_hover" alt="">
+                        <a href="{{ product.images.first.image.url }}"
+                           class="d_block button_type_5 r_corners tr_all_hover box_s_none color_light p_hr_0">
+                            <i class="fa fa-expand"></i>
+                        </a>
+                    {% else %}
+                        <img src="{% static 'images/product-image-placeholder.png' %}" alt="" class="img-responsive">
                     {% endif %}
-                    {% if local_price_range %}
-                        <br>
-                        <small class="text-info">
-                            &asymp;
-                            {% gross local_price_range.min_price html=True %}
-                        </small>
-                    {% endif %}
-                </p>
-            {% endif %}
+                </div>
+                {% with images=product.images.all %}
+                    <div class="relative qv_carousel_wrap">
+                        <button class="button_type_11 bg_light_color_1 t_align_c f_size_ex_large bg_cs_hover r_corners d_inline_middle bg_tr tr_all_hover qv_btn_single_prev">
+                            <i class="fa fa-angle-left "></i>
+                        </button>
 
-            <hr>
+                        <ul class="qv_carousel_single d_inline_middle">
+                            {% for image in images %}
+                                <a href="#" data-image="{{ image.image.crop.750x750 }}"
+                                   data-zoom-image="{{ image.image.url }}">
+                                    <img src="{{ image.image.crop.110x110 }}" alt="">
+                                </a>
+                            {% endfor %}
+                        </ul>
 
-            <div class="visible-xs">
-                {% if product.images.first %}
-                    <img class="img-responsive" src="{{ product.images.first.image.crop.680x680 }}" alt="">
-                {% else %}
-                    <img src="{% static 'images/product-image-placeholder.png' %}" alt="" class="img-responsive">
-                {% endif %}
-                <hr>
-            </div>
-
-            {% if is_visible and product.is_in_stock %}
-                {% block orderform %}
-                <form role="form" class="product-form form-vertical" method="post"
-                 action="{% url 'cart:add-to-cart' product_id=product.pk %}?next={{ product.get_absolute_url }}" novalidate>
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-
-                    <div class="form-group">
-                        <button class="btn btn-lg btn-block btn-primary">
-                            {% trans "Add to cart" %}
+                        <button class="button_type_11 bg_light_color_1 t_align_c f_size_ex_large bg_cs_hover r_corners d_inline_middle bg_tr tr_all_hover qv_btn_single_next">
+                            <i class="fa fa-angle-right "></i>
                         </button>
                     </div>
-                </form>
-                {% endblock %}
-            {% else %}
-                <p class="alert alert-warning">{% trans "This product is currently <strong>unavailable</strong>." %}</p>
-            {% endif %}
-
-            <hr>
-
-            <div itemprop="description">
-                {{ product.description|markdown }}
+                {% endwith %}
             </div>
-
-        </div>
-
-        {% with images=product.images.all %}
-        <div class="col-sm-6 col-sm-pull-6">
-            <div id="product-carousel" class="carousel slide panel panel-default hidden-xs" data-ride="carousel">
-                <div class="carousel-inner">
-                    {% for image in images %}
-                    <div class="item{% if forloop.first %} active{% endif %}">
-                        <a href="#" data-toggle="modal" data-target="#modal-{{ forloop.counter }}">
-                            <img class="img-responsive" src="{{ image.image.crop.750x750 }}" alt="">
-                        </a>
+            <div class="p_top_10 t_xs_align_l">
+                {# description #}
+                <h1 class="color_dark fw_medium m_bottom_10">{{ product }}</h1>
+                {% if not is_visible %}
+                    <div class="alert alert-warning" role="alert">
+                        {% blocktrans with date=product.available_on|date %}<strong>Warning!</strong>
+                            Vous pr&eacute;visualisez un produit qui sera disponible le
+                            <strong>{{ date }}</strong>.
+                        {% endblocktrans %}
                     </div>
-                    {% empty %}
-                        <div class="item active">
-                            <img src="{% static 'images/product-image-placeholder.png' %}" alt="" class="img-responsive">
-                        </div>
-                    {% endfor %}
-                </div>
+                {% endif %}
+                {# TODO rating #}
+                {# <div class="m_bottom_10">#}
+                {#                            <ul class="horizontal_list d_inline_middle type_2 clearfix rating_list tr_all_hover">#}
+                {#                                <li class="active">#}
+                {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                {#                                </li>#}
+                {#                                <li class="active">#}
+                {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                {#                                </li>#}
+                {#                                <li class="active">#}
+                {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                {#                                </li>#}
+                {#                                <li class="active">#}
+                {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                {#                                </li>#}
+                {#                                <li>#}
+                {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                {#                                </li>#}
+                {#                            </ul>#}
+                {# <a href="#" class="d_inline_middle default_t_color f_size_small m_left_5">1 Review(s) </a>#}
+                {# </div>#}
+                <hr class="m_bottom_10 divider_type_3">
+                <table class="description_table m_bottom_10">
+                    <tr>
+                        <td>Disponibilit&eacute; :</td>
+                        {% if product.is_in_stock %}
+                            <td><span class="color_green">En stock</span></td>
+                        {% else %}
+                            <td><span class="color_red">Indisponible</span></td>
+                        {% endif %}
+                    </tr>
+                </table>
+                <hr class="divider_type_3 m_bottom_10">
+                <p class="m_bottom_10">
+                    {{ product.description|markdown }}
+                </p>
+                <hr class="divider_type_3 m_bottom_15">
 
-                {% for image in images %}
-                <div class="modal fade" id="modal-{{ forloop.counter }}"
-                     tabindex="-1" role="dialog" aria-labelledby="myModalLabel{{ forloop.counter }}" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel{{ forloop.counter }}">{{ product }}</h4>
-                            </div>
-
-                            <div class="modal-body">
-                                <img class="img-responsive" src="" data-src="{{ image.image.url }}" alt="">
-                            </div>
-                        </div>
+                {% if product.is_in_stock %}
+                    <div class="m_bottom_15">
+                        {% if discount %}
+                            <s class="v_align_b f_size_ex_large">
+                                {% gross undiscounted_price_range.min_price html=True %}
+                            </s>
+                        {% endif %}
+                        {% if local_price_range %}
+                            <br>
+                            <small class="text-info">
+                                &asymp;
+                                {% gross local_price_range.min_price html=True %}
+                            </small>
+                        {% endif %}
+                        <span class="v_align_b f_size_big m_left_5 scheme_color fw_medium">
+                            {% price_range price_range %}
+                        </span>
                     </div>
-                </div>
-                {% endfor %}
-            </div>
+                {% endif %}
 
-            <div class="product-gallery row">
-                {% for image in images %}
-                <a href="{{ image.image.url }}" target="_blank" class="product-gallery-item col-xs-6 col-md-3">
-                    <img class="thumbnail img-responsive" src="{{ image.image.crop.280x280 }}" alt="">
-                </a>
-                {% endfor %}
+                {% if is_visible and product.is_in_stock %}
+                    {% block orderform %}
+                        <form role="form" class="product-form form-vertical" method="post"
+                              action="{% url 'cart:add-to-cart' product_id=product.pk %}?next={{ product.get_absolute_url }}"
+                              novalidate>
+                            {% csrf_token %}
+
+                            <table class="description_table type_2 m_bottom_15">
+                                <tr>
+                                    <td class="v_align_m"><label for="id_variant">Options :</label></td>
+                                    <td class="v_align_m">
+                                        <select class="form-control" name="variant" id="id_variant" required>
+                                            {% for variant in product.variants.all %}
+                                                <option value="{{ variant.id }}"
+                                                        max="{{ variant.get_stock_quantity }}"
+                                                        {% if variant.get_stock_quantity < 1 %} disabled {% endif %} >
+                                                    {{ variant.display_variant }}
+                                                    - {% gross variant.get_price_per_item %} -
+                                                    {% if variant.get_stock_quantity < 1 %} Indisponible {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="v_align_m"><label for="id_quantity">Quantit&eacute; :</label></td>
+                                    <td class="v_align_m">
+                                        <div class="clearfix quantity r_corners d_inline_middle f_size_medium color_dark">
+                                            <div class="bg_tr d_block f_left" data-direction="down">-</div>
+                                            <input type="text" id="id_quantity" name="quantity" value="1"
+                                                   required min="1"
+                                                   class="f_left">
+                                            <div class="bg_tr d_block f_left" data-direction="up">+</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="v_align_m">
+                                        {# TODO contact à partir de la page produit #}
+                                        {# <button class="button_type_12 bg_light_color_2 tr_delay_hover d_inline_b r_corners color_dark m_left_5 p_hr_0 relative">#}
+                                        {# <i class="fa fa-question-circle f_size_big"></i>#}
+                                        {# <span class="tooltip tr_all_hover r_corners color_dark f_size_small">Poser une question</span>#}
+                                        {# </button>#}
+                                        <button class="button_type_12 r_corners bg_scheme_color color_light tr_delay_hover d_inline_b f_size_large">
+                                            Ajouter au panier
+                                        </button>
+                                    </td>
+                                    <td class="v_align_m"></td>
+                                </tr>
+                            </table>
+                        </form>
+                    {% endblock %}
+                {% else %}
+                    <p class="color_red">Le produit est <strong>indisponible</strong> &agrave; la vente actuellement</p>
+                {% endif %}
+
+                {#  TODO share on social networks #}
+                {# <p class="d_inline_middle">Share this:</p>#}
+                {# <div class="d_inline_middle m_left_5 addthis_widget_container">#}
+                {#  AddThis Button BEGIN  #}
+                {#  <div class="addthis_toolbox addthis_default_style addthis_32x32_style">#}
+                {#      <a class="addthis_button_preferred_1"></a>#}
+                {#      <a class="addthis_button_preferred_2"></a>#}
+                {#      <a class="addthis_button_preferred_3"></a>#}
+                {#      <a class="addthis_button_preferred_4"></a>#}
+                {#      <a class="addthis_button_compact"></a>#}
+                {#      <a class="addthis_counter addthis_bubble_style"></a>#}
+                {#  </div>#}
+                {#  AddThis Button END  #}
+                {# </div>#}
             </div>
         </div>
-        {% endwith %}
     </div>
-</div>
-{% endblock outercontent %}
+{% endblock %}
+
+{#{% block outercontent %}#}
+{#    <div itemscope itemtype="http://schema.org/Product">#}
+{#        <div class="row">#}
+{#            <div class="col-sm-6 col-sm-push-6">#}
+{#                <h1 itemprop="name">#}
+{#                    {{ product }}#}
+{#                </h1>#}
+{##}
+{##}
+{#                <hr>#}
+{##}
+{#                {% if is_visible and product.is_in_stock %}#}
+{#                    {% block orderform %}#}
+{#                        <form role="form" class="product-form form-vertical" method="post"#}
+{#                              action="{% url 'cart:add-to-cart' product_id=product.pk %}?next={{ product.get_absolute_url }}"#}
+{#                              novalidate>#}
+{#                            {% csrf_token %}#}
+{#                            {% bootstrap_form form %}#}
+{##}
+{#                            <div class="form-group">#}
+{#                                <button class="btn btn-lg btn-block btn-primary">#}
+{#                                    {% trans "Add to cart" %}#}
+{#                                </button>#}
+{#                            </div>#}
+{#                        </form>#}
+{#                    {% endblock %}#}
+{#                {% else %}#}
+{#                    <p class="alert alert-warning">{% trans "This product is currently <strong>unavailable</strong>." %}</p>#}
+{#                {% endif %}#}
+{##}
+{#                <hr>#}
+{##}
+{#                <div itemprop="description">#}
+{#                    {{ product.description|markdown }}#}
+{#                </div>#}
+{##}
+{#            </div>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock outercontent %}#}
+
+{% block stylesheet %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/jquery.fancybox-1.3.4.css' %}">
+    {% endcompress %}
+{% endblock stylesheet %}
+
+{% block footer_scripts %}
+    {% compress js %}
+        <script src="{% static 'js/jquery.custom-scrollbar.js' %}"></script>
+        <script src="{% static 'js/jquery.fancybox-1.3.4.js' %}"></script>
+    {% endcompress %}
+    <script async type="text/javascript"
+            src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-5306f8f674bfda4c"></script>
+{% endblock footer_scripts %}
+

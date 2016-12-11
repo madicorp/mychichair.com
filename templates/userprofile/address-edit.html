@@ -2,15 +2,25 @@
 
 {% load i18n %}
 
-{% block title %}{% trans "Edit Address" %} — {{ block.super }}{% endblock %}
+{% block title %}{% if address_form.instance.pk %}{% trans "Changer l&rsquo;adresse" %}{% else %}{% trans "Nouvelle adresse" %}{% endif %} — {{ block.super }}{% endblock %}
 
 {% block breadcrumb %}
-    {{ block.super }}
-    <li><a href="{% url 'profile:details' %}">{% trans "Your profile" %}</a></li>
+    <li class="m_right_10 current">
+        <a href="/" class="default_t_color">
+            {% trans "Accueil" %}
+            <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+        </a>
+    </li>
+    <li class="m_right_10 current">
+        <a href="{% url 'profile:details' %}" class="default_t_color">
+            {% trans "Votre profil" %}
+            <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+        </a>
+    </li>
 {% if address_form.instance.pk %}
-    <li><a href=".">{% trans "Edit address" %}</a></li>
+    <li><a href="." class="default_t_color">{% trans "Changer l&rsquo;adresse" %}</a></li>
 {% else %}
-    <li><a href=".">{% trans "New address" %}</a></li>
+    <li><a href="." class="default_t_color">{% trans "Nouvelle adresse" %}</a></li>
 {% endif %}
 {% endblock breadcrumb %}
 
@@ -23,7 +33,7 @@
             <br>
             {% include "userprofile/snippets/address-form.html" %}
             <p class="text-right">
-                <button type="submit" class="btn btn-primary">{% trans "Save changes" %}</button>
+                <button type="submit" class="btn button_type_6 bg_scheme_color f_size_large r_corners tr_all_hover color_light m_bottom_20">{% trans "Sauvegarder" %}</button>
             </p>
         </form>
     </div>

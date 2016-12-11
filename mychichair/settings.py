@@ -27,6 +27,11 @@ WSGI_APPLICATION = 'mychichair.wsgi.application'
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
+if os.environ.get('ADMIN_NAME', None):
+    ADMINS = (
+        (os.environ.get('ADMIN_NAME'), os.environ.get('ADMIN_EMAIL')),
+    )
+
 MANAGERS = ADMINS
 INTERNAL_IPS = os.environ.get('INTERNAL_IPS', '127.0.0.1').split()
 
@@ -41,8 +46,8 @@ SQLITE_DB_URL = 'sqlite:///' + os.path.join(PROJECT_ROOT, 'dev.sqlite')
 DATABASES = {
     'default': dj_database_url.config(default=SQLITE_DB_URL, conn_max_age=600)}
 
-TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Africa/Dakar'
+LANGUAGE_CODE = 'fr-fr'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -91,7 +96,8 @@ context_processors = [
     'django.template.context_processors.request',
     'mychichair.core.context_processors.default_currency',
     'mychichair.core.context_processors.categories',
-    'mychichair.cart.context_processors.cart_counter'
+    'mychichair.cart.context_processors.cart_counter',
+    'mychichair.cart.context_processors.cart_lines',
 ]
 
 loaders = [
@@ -152,6 +158,7 @@ INSTALLED_APPS = [
     'mychichair.registration',
     'mychichair.dashboard',
     'mychichair.shipping',
+    'mychichair.cash',
 
     # External apps
     'versatileimagefield',
@@ -225,10 +232,10 @@ AUTH_USER_MODEL = 'userprofile.User'
 
 LOGIN_URL = '/account/login'
 
-DEFAULT_COUNTRY = 'US'
-DEFAULT_CURRENCY = 'USD'
+DEFAULT_COUNTRY = 'SN'
+DEFAULT_CURRENCY = 'XOF'
 AVAILABLE_CURRENCIES = [DEFAULT_CURRENCY]
-DEFAULT_WEIGHT = 'lb'
+DEFAULT_WEIGHT = 'kg'
 
 OPENEXCHANGERATES_API_KEY = os.environ.get('OPENEXCHANGERATES_API_KEY')
 
@@ -246,13 +253,13 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 PAYMENT_MODEL = 'order.Payment'
 
 PAYMENT_VARIANTS = {
-    'default': ('payments.dummy.DummyProvider', {})}
+    'default': ('mychichair.cash.core.CashPaymentProvider', {})}
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 CHECKOUT_PAYMENT_CHOICES = [
-    ('default', 'Dummy provider')]
+    ('default', 'Paiement en cash')]
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'}

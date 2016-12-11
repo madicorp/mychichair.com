@@ -115,6 +115,9 @@ class Product(models.Model, ItemRange):
         return reverse('product:details', kwargs={'slug': self.get_slug(),
                                                   'product_id': self.id})
 
+    def get_variants_in_stock(self):
+        return self.variants.filter()
+
     def get_slug(self):
         return slugify(smart_text(unidecode(self.name)))
 

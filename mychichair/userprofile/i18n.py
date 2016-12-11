@@ -2,6 +2,7 @@ from collections import defaultdict
 
 import i18naddress
 from django import forms
+from django.conf import settings
 from django.forms.forms import BoundField
 from django.utils.translation import pgettext_lazy
 from django_countries.data import COUNTRIES
@@ -24,7 +25,7 @@ AREA_TYPE_TRANSLATIONS = {
     'oblast': pgettext_lazy('Address field', 'Oblast'),
     'parish': pgettext_lazy('Address field', 'Parish'),
     'pin': pgettext_lazy('Address field', 'PIN'),
-    'postal': pgettext_lazy('Address field', 'Postal code'),
+    'postal': pgettext_lazy('Address field', 'Code postal'),
     'prefecture': pgettext_lazy('Address field', 'Prefecture'),
     'province': pgettext_lazy('Address field', 'Province'),
     'state': pgettext_lazy('Address field', 'State'),
@@ -111,7 +112,7 @@ class CountryAwareAddressForm(AddressForm):
                 except KeyError:
                     error_msg = pgettext_lazy(
                         'Address form',
-                        'This value is invalid for selected country')
+                        'Cette valeur est invalide pour le pays sélectionné')
                 self.add_error(field, error_msg)
 
     def validate_address(self, data):
@@ -199,8 +200,11 @@ for country in COUNTRIES.keys():
         country_rules = i18naddress.get_validation_rules({})
         UNKNOWN_COUNTRIES.add(country)
 
-COUNTRY_CHOICES = [(code, label) for code, label in COUNTRIES.items()
-                   if code not in UNKNOWN_COUNTRIES]
+# TODO when several countries
+# COUNTRY_CHOICES = [(code, label) for code, label in COUNTRIES.items()
+#                   if code not in UNKNOWN_COUNTRIES]
+default_country = settings.DEFAULT_COUNTRY
+COUNTRY_CHOICES = [(default_country, COUNTRIES[default_country])]
 # Sort choices list by country name
 COUNTRY_CHOICES = sorted(COUNTRY_CHOICES, key=lambda choice: choice[1])
 

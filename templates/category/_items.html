@@ -3,34 +3,275 @@
 {% load price_range from price_ranges %}
 {% load discounted_price_range price_difference from discount %}
 
-{% for product in products %}
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" itemscope itemtype="https://schema.org/Product">
-        <div class="panel panel-default text-center">
-            <div class="panel-body">
-                <a itemprop="url" href="{{ product.get_absolute_url }}">
-                    {% if product.images.first %}
-                        <img itemprop="image" class="img-responsive" src="{{ product.images.first.image.crop.400x400 }}" alt="">
-                    {% else %}
-                        <img src="{% static 'images/product-image-placeholder.png' %}" alt="" class="img-responsive">
-                    {% endif %}
-                    <span class="product-list-item-name" itemprop="name" title="{{ product }}">{{ product }}</span>
+{% block content_header %}
+    {# slider #}
+    <div class="camera_wrap m_bottom_0">
+        <div data-src="{% static 'images/background.jpeg' %}"
+             data-custom-thumb="{% static 'images/background.jpeg' %}">
+            <div class="camera_caption_1 fadeFromTop t_align_c d_xs_none">
+                <div class="f_size_large color_light tt_uppercase slider_title_3 m_bottom_5">MyChicHair</div>
+                <hr class="slider_divider d_inline_b m_bottom_5">
+                <div class="color_light slider_title tt_uppercase t_align_c m_bottom_45 m_sm_bottom_20">
+                    <b>Achetez chez nous des cheveux naturels de qualit&eacute;.</b>
+                </div>
+                <a href="#products" role="button"
+                   class="tr_all_hover button_type_4 bg_scheme_color color_light r_corners tt_uppercase">
+                    Commencer le shopping
                 </a>
             </div>
-
-            <div class="panel-footer">
-                {% if product.is_in_stock %}
-                    {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
-                        {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
-                            {% price_range price_range %}
-                            {% if undiscounted.min_price != price_range.min_price %}
-                                <span class="label label-success">{% trans "Discount!" %}</span>
-                            {% endif %}
-                        {% endwith %}
-                    {% endwith %}
-                {% else %}
-                    &nbsp;
-                {% endif %}
+        </div>
+        <div data-src="{% static 'images/background.jpeg' %}"
+             data-custom-thumb="{% static 'images/background.jpeg' %}">
+            <div class="camera_caption_2 fadeIn t_align_c d_xs_none">
+                <div class="f_size_large tt_uppercase slider_title_3 scheme_color">MyChicHair</div>
+                <hr class="slider_divider type_2 m_bottom_5 d_inline_b">
+                <div class="color_light slider_title tt_uppercase t_align_c m_bottom_65 m_sm_bottom_20">
+                    <b>
+                        <span class="scheme_color">Suivez-nous sur les r&eacute;seaux sociaux</span>
+                        <br>
+                        <span class="color_dark"></span>
+                    </b>
+                </div>
+                <a class="icon-facebook fa-stack fa-lg fa-3x" href="#"
+                   onclick="openSocialNetworkLink('fb://page/mychichair', 'https://www.facebook.com/mychichair/')">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x"></i>
+                </a>
+                <a class="icon-instagram fa-stack fa-lg fa-3x" href="#"
+                   onclick="openSocialNetworkLink('instagram://user?username=mychichair', 'https://www.instagram.com/mychichair/')">
+                    <i class="fa fa-square fa-stack-2x"></i>
+                    <i class="fa fa-instagram fa-stack-1x"></i>
+                </a>
             </div>
         </div>
     </div>
-{% endfor %}
+{% endblock %}
+
+{% if products %}
+    <section class="row" id="products">
+        {% for product in products %}
+            <div class="col-md-4" itemscope itemtype="https://schema.org/Product">
+                <figure class="r_corners photoframe shadow relative hit long">
+                    {# product preview #}
+                    <a href="{{ product.get_absolute_url }}" class="d_block relative pp_wrap">
+                        {# hot product #}
+                        {# <span class="hot_stripe type_2"><img src="images/hot_product_type_2.png" alt=""></span>#}
+                        {% if product.is_in_stock %}
+                            {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
+                                {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
+                                    {% if undiscounted.min_price != price_range.min_price %}
+                                        <span class="hot_stripe">
+                                            <img src="{% static 'images/sale_product.png' %}" alt="">
+                                        </span>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        {% endif %}
+
+                        {% if product.images.first %}
+                            <img itemprop="image" class="img-responsive"
+                                 src="{{ product.images.first.image.crop.322x322 }}" alt="">
+                        {% else %}
+                            <img src="{% static 'images/product-image-placeholder.png' %}" alt=""
+                                 class="img-responsive">
+                        {% endif %}
+                        {# TODO product quick view #}
+                        {# <span data-popup="#quick_view_product"#}
+                        {# class="button_type_5 box_s_none color_light r_corners tr_all_hover d_xs_none">#}
+                        {# Aper&ccedil;u#}
+                        {# </span>#}
+                    </a>
+                    {# description and price of product #}
+                    <figcaption>
+                        <h5 class="m_bottom_10" title="{{ product }}">
+                            <a href="{{ product.get_absolute_url }}" class="color_dark">{{ product }}</a>
+                        </h5>
+                        <div class="clearfix">
+                            <p class="scheme_color f_left f_size_large m_bottom_15">
+                                {% if product.is_in_stock %}
+                                    {% with price_range=product|discounted_price_range:request.discounts undiscounted=product.get_price_range %}
+                                        {% with discount=undiscounted.min_price|price_difference:price_range.min_price %}
+                                            {% price_range price_range %}
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% else %}
+                                    Indisponible
+                                {% endif %}
+                            </p>
+                            {# TODO rating #}
+                            {#                            <ul class="horizontal_list f_right clearfix rating_list tr_all_hover">#}
+                            {#                                <li class="active">#}
+                            {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                            {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                            {#                                </li>#}
+                            {#                                <li class="active">#}
+                            {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                            {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                            {#                                </li>#}
+                            {#                                <li class="active">#}
+                            {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                            {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                            {#                                </li>#}
+                            {#                                <li class="active">#}
+                            {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                            {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                            {#                                </li>#}
+                            {#                                <li>#}
+                            {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+                            {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+                            {#                                </li>#}
+                            {#                            </ul>#}
+                        </div>
+                        {# TODO ajout au panier rapide #}
+                        {# <button class="button_type_4 bg_scheme_color r_corners tr_all_hover color_light mw_0">#}
+                        {#  Ajouter au panier#}
+                        {# </button>#}
+                    </figcaption>
+                </figure>
+            </div>
+        {% endfor %}
+    </section>
+    {# TODO quickview: with handlebars instead to avoid useless created DOM #}
+    {# product quick view popup #}
+    {#    <div class="popup_wrap d_none" id="quick_view_product">#}
+    {#        <section class="popup r_corners shadow">#}
+    {#            <button class="bg_tr color_dark tr_all_hover text_cs_hover close f_size_large"><i class="fa fa-times"></i></button>#}
+    {#            <div class="clearfix">#}
+    {#                <div class="custom_scrollbar">#}
+    {# left popup column #}
+    {#                    <div class="f_left half_column">#}
+    {#                        <div class="relative d_inline_b m_bottom_10 qv_preview">#}
+    {#                            <span class="hot_stripe"><img src="images/sale_product.png" alt=""></span>#}
+    {#                            <img src="images/quick_view_img_1.jpg" class="tr_all_hover" alt="">#}
+    {#                        </div>#}
+    {# carousel #}
+    {#                        <div class="relative qv_carousel_wrap m_bottom_20">#}
+    {#                            <button class="button_type_11 t_align_c f_size_ex_large bg_cs_hover r_corners d_inline_middle bg_tr tr_all_hover qv_btn_prev">#}
+    {#                                <i class="fa fa-angle-left "></i>#}
+    {#                            </button>#}
+    {#                            <ul class="qv_carousel d_inline_middle">#}
+    {#                                <li data-src="images/quick_view_img_1.jpg"><img src="images/quick_view_img_4.jpg" alt=""></li>#}
+    {#                                <li data-src="images/quick_view_img_2.jpg"><img src="images/quick_view_img_5.jpg" alt=""></li>#}
+    {#                                <li data-src="images/quick_view_img_3.jpg"><img src="images/quick_view_img_6.jpg" alt=""></li>#}
+    {#                                <li data-src="images/quick_view_img_1.jpg"><img src="images/quick_view_img_4.jpg" alt=""></li>#}
+    {#                                <li data-src="images/quick_view_img_2.jpg"><img src="images/quick_view_img_5.jpg" alt=""></li>#}
+    {#                                <li data-src="images/quick_view_img_3.jpg"><img src="images/quick_view_img_6.jpg" alt=""></li>#}
+    {#                            </ul>#}
+    {#                            <button class="button_type_11 t_align_c f_size_ex_large bg_cs_hover r_corners d_inline_middle bg_tr tr_all_hover qv_btn_next">#}
+    {#                                <i class="fa fa-angle-right "></i>#}
+    {#                            </button>#}
+    {#                        </div>#}
+    {#                        <div class="d_inline_middle">Share this:</div>#}
+    {#                        <div class="d_inline_middle m_left_5">#}
+    {#  AddThis Button BEGIN  #}
+    {#                            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">#}
+    {#                                <a class="addthis_button_preferred_1"></a>#}
+    {#                                <a class="addthis_button_preferred_2"></a>#}
+    {#                                <a class="addthis_button_preferred_3"></a>#}
+    {#                                <a class="addthis_button_preferred_4"></a>#}
+    {#                                <a class="addthis_button_compact"></a>#}
+    {#                                <a class="addthis_counter addthis_bubble_style"></a>#}
+    {#                            </div>#}
+    {#  AddThis Button END  #}
+    {#                        </div>#}
+    {#                    </div>#}
+    {# right popup column #}
+    {#                    <div class="f_right half_column">#}
+    {# description #}
+    {#                        <h2 class="m_bottom_10"><a href="#" class="color_dark fw_medium">Eget elementum vel</a></h2>#}
+    {#                        <div class="m_bottom_10">#}
+    {# rating #}
+    {#                            <ul class="horizontal_list d_inline_middle type_2 clearfix rating_list tr_all_hover">#}
+    {#                                <li class="active">#}
+    {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+    {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+    {#                                </li>#}
+    {#                                <li class="active">#}
+    {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+    {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+    {#                                </li>#}
+    {#                                <li class="active">#}
+    {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+    {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+    {#                                </li>#}
+    {#                                <li class="active">#}
+    {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+    {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+    {#                                </li>#}
+    {#                                <li>#}
+    {#                                    <i class="fa fa-star-o empty tr_all_hover"></i>#}
+    {#                                    <i class="fa fa-star active tr_all_hover"></i>#}
+    {#                                </li>#}
+    {#                            </ul>#}
+    {#                            <a href="#" class="d_inline_middle default_t_color f_size_small m_left_5">1 Review(s) </a>#}
+    {#                        </div>#}
+    {#                        <hr class="m_bottom_10 divider_type_3">#}
+    {#                        <table class="description_table m_bottom_10">#}
+    {#                            <tr>#}
+    {#                                <td>Manufacturer:</td>#}
+    {#                                <td><a href="#" class="color_dark">Chanel</a></td>#}
+    {#                            </tr>#}
+    {#                            <tr>#}
+    {#                                <td>Availability:</td>#}
+    {#                                <td><span class="color_green">in stock</span> 20 item(s)</td>#}
+    {#                            </tr>#}
+    {#                            <tr>#}
+    {#                                <td>Product Code:</td>#}
+    {#                                <td>PS06</td>#}
+    {#                            </tr>#}
+    {#                        </table>#}
+    {#                        <h5 class="fw_medium m_bottom_10">Product Dimensions and Weight</h5>#}
+    {#                        <table class="description_table m_bottom_5">#}
+    {#                            <tr>#}
+    {#                                <td>Product Length:</td>#}
+    {#                                <td><span class="color_dark">10.0000M</span></td>#}
+    {#                            </tr>#}
+    {#                            <tr>#}
+    {#                                <td>Product Weight:</td>#}
+    {#                                <td>10.0000KG</td>#}
+    {#                            </tr>#}
+    {#                        </table>#}
+    {#                        <hr class="divider_type_3 m_bottom_10">#}
+    {#                        <p class="m_bottom_10">Ut tellus dolor, dapibus eget, elementum vel, cursus eleifend, elit. Aenean auctor wisi et urna. Aliquam erat volutpat. Duis ac turpis. Donec sit amet eros. Lorem ipsum dolor sit amet, consecvtetuer adipiscing elit. </p>#}
+    {#                        <hr class="divider_type_3 m_bottom_15">#}
+    {#                        <div class="m_bottom_15">#}
+    {#                            <s class="v_align_b f_size_ex_large">$152.00</s><span class="v_align_b f_size_big m_left_5 scheme_color fw_medium">$102.00</span>#}
+    {#                        </div>#}
+    {#                        <table class="description_table type_2 m_bottom_15">#}
+    {#                            <tr>#}
+    {#                                <td class="v_align_m">Size:</td>#}
+    {#                                <td class="v_align_m">#}
+    {#                                    <div class="custom_select f_size_medium relative d_inline_middle">#}
+    {#                                        <div class="select_title r_corners relative color_dark">s</div>#}
+    {#                                        <ul class="select_list d_none"></ul>#}
+    {#                                        <select name="product_name">#}
+    {#                                            <option value="s">s</option>#}
+    {#                                            <option value="m">m</option>#}
+    {#                                            <option value="l">l</option>#}
+    {#                                        </select>#}
+    {#                                    </div>#}
+    {#                                </td>#}
+    {#                            </tr>#}
+    {#                            <tr>#}
+    {#                                <td class="v_align_m">Quantity:</td>#}
+    {#                                <td class="v_align_m">#}
+    {#                                    <div class="clearfix quantity r_corners d_inline_middle f_size_medium color_dark">#}
+    {#                                        <button class="bg_tr d_block f_left" data-direction="down">-</button>#}
+    {#                                        <input type="text" name="" readonly value="1" class="f_left">#}
+    {#                                        <button class="bg_tr d_block f_left" data-direction="up">+</button>#}
+    {#                                    </div>#}
+    {#                                </td>#}
+    {#                            </tr>#}
+    {#                        </table>#}
+    {#                        <div class="clearfix m_bottom_15">#}
+    {#                            <button class="button_type_12 r_corners bg_scheme_color color_light tr_delay_hover f_left f_size_large">Add to Cart</button>#}
+    {#                            <button class="button_type_12 bg_light_color_2 tr_delay_hover f_left r_corners color_dark m_left_5 p_hr_0"><i class="fa fa-heart-o f_size_big"></i><span class="tooltip tr_all_hover r_corners color_dark f_size_small">Wishlist</span></button>#}
+    {#                            <button class="button_type_12 bg_light_color_2 tr_delay_hover f_left r_corners color_dark m_left_5 p_hr_0"><i class="fa fa-files-o f_size_big"></i><span class="tooltip tr_all_hover r_corners color_dark f_size_small">Compare</span></button>#}
+    {#                            <button class="button_type_12 bg_light_color_2 tr_delay_hover f_left r_corners color_dark m_left_5 p_hr_0 relative"><i class="fa fa-question-circle f_size_big"></i><span class="tooltip tr_all_hover r_corners color_dark f_size_small">Ask a Question</span></button>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </section>#}
+    {#    </div>#}
+{% endif %}

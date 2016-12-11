@@ -32,37 +32,37 @@ class AddressManager(models.Manager):
 @python_2_unicode_compatible
 class Address(models.Model):
     first_name = models.CharField(
-        pgettext_lazy('Address field', 'given name'),
+        pgettext_lazy('Address field', 'prénom(s)'),
         max_length=256, blank=True)
     last_name = models.CharField(
-        pgettext_lazy('Address field', 'family name'),
+        pgettext_lazy('Address field', 'nom de famille'),
         max_length=256, blank=True)
     company_name = models.CharField(
-        pgettext_lazy('Address field', 'company or organization'),
+        pgettext_lazy('Address field', 'compagnie ou organisation'),
         max_length=256, blank=True)
     street_address_1 = models.CharField(
-        pgettext_lazy('Address field', 'address'),
+        pgettext_lazy('Address field', 'adresse'),
         max_length=256, blank=True)
     street_address_2 = models.CharField(
-        pgettext_lazy('Address field', 'address'),
+        pgettext_lazy('Address field', "complément d'adresse"),
         max_length=256, blank=True)
     city = models.CharField(
-        pgettext_lazy('Address field', 'city'),
+        pgettext_lazy('Address field', 'ville'),
         max_length=256, blank=True)
     city_area = models.CharField(
-        pgettext_lazy('Address field', 'district'),
+        pgettext_lazy('Address field', 'quartier'),
         max_length=128, blank=True)
     postal_code = models.CharField(
-        pgettext_lazy('Address field', 'postal code'),
+        pgettext_lazy('Address field', 'code postal'),
         max_length=20, blank=True)
     country = CountryField(
-        pgettext_lazy('Address field', 'country'))
+        pgettext_lazy('Address field', 'pays'))
     country_area = models.CharField(
-        pgettext_lazy('Address field', 'state or province'),
+        pgettext_lazy('Address field', 'état ou province'),
         max_length=128, blank=True)
     phone = models.CharField(
-        pgettext_lazy('Address field', 'phone number'),
-        max_length=30, blank=True)
+        pgettext_lazy('Address field', 'numéro de téléphone'),
+        max_length=30, blank=False, null=False)
     objects = AddressManager()
 
     @property

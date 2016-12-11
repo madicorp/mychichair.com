@@ -7,12 +7,10 @@ from ..shipping.models import ShippingMethodCountry
 
 
 class CheckoutAddressField(forms.ChoiceField):
-
     widget = forms.RadioSelect()
 
 
 class ShippingAddressesForm(forms.Form):
-
     NEW_ADDRESS = 'new_address'
     CHOICES = (
         (NEW_ADDRESS, _('Enter a new address')),
@@ -30,7 +28,6 @@ class ShippingAddressesForm(forms.Form):
 
 
 class BillingAddressesForm(ShippingAddressesForm):
-
     NEW_ADDRESS = 'new_address'
     SHIPPING_ADDRESS = 'shipping_address'
     CHOICES = (
@@ -42,12 +39,10 @@ class BillingAddressesForm(ShippingAddressesForm):
 
 
 class BillingWithoutShippingAddressForm(ShippingAddressesForm):
-
     pass
 
 
 class ShippingCountryChoiceField(forms.ModelChoiceField):
-
     widget = forms.RadioSelect()
 
     def label_from_instance(self, obj):
@@ -57,7 +52,6 @@ class ShippingCountryChoiceField(forms.ModelChoiceField):
 
 
 class ShippingMethodForm(forms.Form):
-
     method = ShippingCountryChoiceField(
         queryset=ShippingMethodCountry.objects.select_related(
             'shipping_method').order_by('price').all(),
@@ -70,17 +64,15 @@ class ShippingMethodForm(forms.Form):
             queryset = method_field.queryset
             method_field.queryset = queryset.unique_for_country_code(country_code)
         if self.initial.get('method') is None:
-            method_field.initial = method_field.queryset.first()
+            self.initial = {'method': method_field.queryset.first()}
         method_field.empty_label = None
 
 
 class AnonymousUserShippingForm(forms.Form):
-
     email = forms.EmailField(
         required=True, widget=forms.EmailInput(attrs={'autocomplete': 'shipping email'}))
 
 
 class AnonymousUserBillingForm(forms.Form):
-
     email = forms.EmailField(
         required=True, widget=forms.EmailInput(attrs={'autocomplete': 'billing email'}))

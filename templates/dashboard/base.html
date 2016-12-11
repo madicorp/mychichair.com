@@ -7,11 +7,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-    <title>{% block title %}{% trans "Dashboard - Saleor" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Dashboard - MyChicHair" %}{% endblock %}</title>
 
     {% render_bundle 'vendor' 'css' %}
     {% render_bundle 'dashboard' 'css' %}
     <link rel="stylesheet" type="text/css" href="{% static "versatileimagefield/css/versatileimagefield.css" %}">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static "css/custom.css" %}">
 
     {% block custom_css %}
     {% endblock %}
@@ -34,9 +36,9 @@
                 </div>
             </div>
             <ul class="side-nav fixed" id="side-menu">
-                <li class="brand-logo">
+                <li class="brand-logo brand">
                     <a href="{% url 'dashboard:index' %}">
-                        <img src="{% static "img/dashboard-logo.svg" %}" alt="Saleor">
+                        MyChicHair
                     </a>
                 </li>
                 <li class="side-nav-user">

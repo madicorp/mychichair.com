@@ -29,6 +29,7 @@ def index(request, cart):
                                    initial=initial, discounts=discounts)
         cart_lines.append({
             'variant': line.variant,
+            'quantity': line.get_quantity(),
             'get_price_per_item': line.get_price_per_item(discounts),
             'get_total': line.get_total(discounts=discounts),
             'form': form})

@@ -22,16 +22,16 @@ class AddToCartForm(forms.Form):
     quantity = QuantityField(label=pgettext_lazy('Form field', 'Quantity'))
     error_messages = {
         'not-available': ugettext_lazy(
-            'Sorry. This product is currently not available.'
+            'Désolé. Ce produit est indisponible.'
         ),
         'empty-stock': ugettext_lazy(
-            'Sorry. This product is currently out of stock.'
+            "Désolé. Ce produit n'est plus en stock."
         ),
         'variant-does-not-exists': ugettext_lazy(
-            'Oops. We could not find that product.'
+            "Oops. Nous n'avons pas trouvé ce produit."
         ),
         'insufficient-stock': ugettext_lazy(
-            'Only %(remaining)d remaining in stock.'
+            "Nous n'avons que %(remaining)d exemplaires restant en stock."
         )
     }
 

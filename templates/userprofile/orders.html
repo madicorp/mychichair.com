@@ -2,11 +2,16 @@
 {% load i18n %}
 {% load gross from prices_i18n %}
 
-{% block title %}{% trans "Your orders" %} — {{ block.super }}{% endblock %}
+{% block title %}{% trans "Vos commandes" %} — {{ block.super }}{% endblock %}
 
 {% block breadcrumb %}
-    {{ block.super }}
-    <li><a href="{% url 'profile:orders' %}">{% trans "Your orders" %}</a></li>
+    <li class="m_right_10 current">
+        <a href="/" class="default_t_color">
+            {% trans "Accueil" %}
+            <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+        </a>
+    </li>
+    <li><a href="{% url 'profile:orders' %}" class="default_t_color">{% trans "Vos commandes" %}</a></li>
 {% endblock breadcrumb %}
 
 {% block content %}
@@ -14,19 +19,19 @@
         <thead>
             <tr>
                 <th class="col-sm-2">
-                    {% trans "Order #" %}
+                    {% trans "Commande #" %}
                 </th>
                 <th class="col-sm-2">
                     {% trans "Date" %}
                 </th>
                 <th class="col-sm-2">
-                    {% trans "Price" %}
+                    {% trans "Prix" %}
                 </th>
                 <th class="col-sm-2">
-                    {% trans "Status" %}
+                    {% trans "Statut" %}
                 </th>
                 <th class="col-sm-2">
-                    {% trans "Last status change" %}
+                    {% trans "Dernier changement de statut" %}
                 </th>
             </tr>
         </thead>

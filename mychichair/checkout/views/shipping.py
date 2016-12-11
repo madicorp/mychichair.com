@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 
@@ -6,8 +7,13 @@ from ...userprofile.forms import get_address_form
 from ...userprofile.models import Address
 
 
-def anonymous_user_shipping_address_view(request, checkout):
+def _get_initial_country_code(request):
+    if request.country.code:
+        return request.country.code
+    return settings.DEFAULT_COUNTRY
 
+
+def anonymous_user_shipping_address_view(request, checkout):
     address_form, preview = get_address_form(
         request.POST or None, country_code=request.country.code,
         autocomplete_type='shipping',
@@ -43,6 +49,7 @@ def user_shipping_address_view(request, checkout):
     elif shipping_address:
         address_form, preview = get_address_form(
             data, country_code=shipping_address.country.code,
+            initial={'country': request.country},
             instance=shipping_address)
         addresses_form = ShippingAddressesForm(
             data, additional_addresses=additional_addresses)

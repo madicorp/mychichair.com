@@ -5,45 +5,54 @@
 {% block title %}{% trans "Login" %} — {{ block.super }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form method="post" action="{% url 'registration:login' %}" novalidate>
-                    {% csrf_token %}
-                    <fieldset>
-                        <legend>{% trans 'Log in' %}</legend>
-                        {% bootstrap_form form %}
-                        <input type="hidden" name="next" value="{{ next }}" />
-                    </fieldset>
-
-                    <div class="form-group text-right">
-                        <a class="btn btn-secondary" href="{% url 'registration:request_email_confirmation' %}">{% trans "I don't know my password" %}</a>
-                        <button class="btn btn-primary">
-                            {% trans "Log in" %}
-                        </button>
-                    </div>
-                    <hr>
-                    {% if facebook_login_url or google_login_url %}
-                        <p>{% trans "Want to use your social profile?" %}</p>
-                        <p>
-                            {% if facebook_login_url %}
-                                <a class="btn btn-default" href="{{ facebook_login_url }}">
-                                    {% trans "Log in using Facebook" %}
-                                </a>
-                            {% endif %}
-                            {% if google_login_url %}
-                                <a class="btn btn-default" href="{{ google_login_url }}"> {% trans "Log in using Google" %}</a>
-                            {% endif %}
-                        </p>
-                        <hr>
-                    {% endif %}
-                    <div class="form-group">
-                        <p>{% trans "Don't have an account yet?" %} <a class="btn btn-secondary" href="{% url 'registration:request_email_confirmation' %}">{% trans "Register" %}</a></p>
-                    </div>
-                </form>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form method="post" action="{% url 'registration:login' %}" novalidate>
+                        {% if facebook_login_url or google_login_url %}
+                            <p>Se connecter par les réseaux sociaux ?</p>
+                            <p style="text-align: center">
+                                {% if facebook_login_url %}
+                                    <a class="icon-facebook fa-stack fa-lg" href="{{ facebook_login_url }}">
+                                        <i class="fa fa-square fa-stack-2x"></i>
+                                        <i class="fa fa-facebook fa-stack-1x"></i>
+                                    </a>
+                                {% endif %}
+                                {% if google_login_url %}
+                                    <a class="icon-gplus fa-stack fa-lg" href="{{ google_login_url }}">
+                                        <i class="fa fa-square fa-stack-2x"></i>
+                                        <i class="fa fa-google-plus fa-stack-1x"></i>
+                                    </a>
+                                {% endif %}
+                            </p>
+                            <hr>
+                        {% endif %}
+                        {% csrf_token %}
+                        <ul>
+                            <li class="m_bottom_15">
+                                <label for="username" class="m_bottom_5 d_inline_b">Nom d&rsquo;utilisateur</label><br>
+                                <input type="text" name="username" id="id_username" class="r_corners full_width">
+                            </li>
+                            <li class="m_bottom_25">
+                                <label for="password" class="m_bottom_5 d_inline_b">Mot de passe</label><br>
+                                <input type="password" name="password" id="id_password" class="r_corners full_width">
+                            </li>
+                            <li class="clearfix m_bottom_30">
+                                <button class="button_type_4 tr_all_hover r_corners f_left bg_scheme_color color_light f_mxs_none m_mxs_bottom_15">
+                                    Se connecter
+                                </button>
+                                <div class="f_right f_size_medium f_mxs_none">
+                                    <a href="{% url 'registration:request_email_confirmation' %}" class="color_dark">
+                                        Inscription ou Mot de passe oubli&eacute; ?
+                                    </a>
+                                    <br>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

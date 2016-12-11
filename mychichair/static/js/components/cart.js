@@ -189,7 +189,7 @@ class CartItemAmountSelect extends Component {
             onClick={this.sendQuantityWrapper.bind(this)}
             type="submit"
           >
-            Update
+            Mettre &agrave; jour
           </button>
         </span>
       </div>
@@ -211,7 +211,7 @@ class CartItemAmountSelect extends Component {
           type="submit"
         >
           <span className="text-muted">
-            Remove from cart
+            Supprimer du panier
           </span>
         </button>
       </div>
