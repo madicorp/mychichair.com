@@ -5,6 +5,8 @@ from fabric.context_managers import settings, hide
 from fabric.operations import local
 
 _line = red('#' * 74)
+_default_admin_name = 'admin'
+_default_admin_email = 'admin@example.org'
 _default_pwd = 'changeme'
 _data_dir = '/var/data'
 _log_dir = '/var/log'
@@ -34,12 +36,15 @@ def launch_local():
     local("./docker/mychichair/docker-entrypoint.sh")
 
 
-def launch_prod_local(contact_email, contact_email_pwd, postgres_user='admin', postgre_pwd=_default_pwd,
+def launch_prod_local(contact_email, contact_email_pwd, admin_name=_default_admin_name,
+                      admin_email=_default_admin_email, postgres_user='admin', postgre_pwd=_default_pwd,
                       secret_key=_default_pwd, media_dir='./media', data_dir='./data', log_dir='./log'):
     _build_docker_compose_file(media_dir, data_dir, log_dir)
     _build_web_container()
     _stop_and_remove_containers()
     db_url = 'postgres://{0}:{1}@db/{0}'.format(postgres_user, postgre_pwd)
+    os.environ['ADMIN_NAME'] = admin_name
+    os.environ['ADMIN_EMAIL'] = admin_email
     os.environ['CONTACT_EMAIL'] = contact_email
     os.environ['CONTACT_EMAIL_PASSWORD'] = contact_email_pwd
     os.environ['DATABASE_URL'] = db_url
@@ -74,7 +79,8 @@ def _is_my_chic_hair_com_active():
     return False
 
 
-def launch_prod_digital_ocean(contact_email, contact_email_pwd, postgres_user, postgre_pwd, secret_key):
+def launch_prod_digital_ocean(contact_email, contact_email_pwd, admin_name, admin_email, postgres_user,
+                              postgre_pwd, secret_key):
     if _is_my_chic_hair_com_active():
-        launch_prod_local(contact_email, contact_email_pwd, postgres_user, postgre_pwd, secret_key,
-                          '{}/mychichair/media'.format(_data_dir), _data_dir, _log_dir)
+        launch_prod_local(contact_email, contact_email_pwd, admin_name, admin_email, postgres_user, postgre_pwd,
+                          secret_key, '{}/mychichair/media'.format(_data_dir), _data_dir, _log_dir)

@@ -40,6 +40,8 @@ services:
       - ALLOWED_HOSTS
       - CONTACT_EMAIL
       - CONTACT_EMAIL_PASSWORD
+      - ADMIN_NAME
+      - ADMIN_EMAIL
 
     links:
       - db
