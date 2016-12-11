@@ -1,0 +1,50 @@
+{% extends "checkout/details.html" %}
+{% load i18n %}
+{% load gross from prices_i18n %}
+{% load bootstrap_form from bootstrap3 %}
+
+
+{% block steps_menu %}
+    <div class="nav nav-pills nav-justified nav-wizard">
+        <a href="{% url "cart:index" %}">
+            {% trans "Panier" %}
+            <div class="nav-arrow"></div>
+        </a>
+        <a href="{% url "checkout:shipping-address" %}">
+            <div class="nav-wedge"></div>
+            {% trans "Adresse de livraison" %}
+            <div class="nav-arrow"></div>
+        </a>
+        <a class="active" href="{% url "checkout:shipping-method" %}">
+            <div class="nav-wedge"></div>
+            {% trans "M&eacute;thode de livraison" %}
+            <div class="nav-arrow"></div>
+        </a>
+        <a>
+            <div class="nav-wedge"></div>
+            {% trans "R&eacute;sum&eacute;" %}
+        </a>
+    </div>
+{% endblock steps_menu %}
+
+
+{% block forms %}
+    <div class="page-header">
+        <h3>{% trans "Adresse de livraison" %}</h3>
+    </div>
+
+    {% include "userprofile/snippets/address-details.html" with address=checkout.shipping_address only %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <h3>{% trans "M&eacute;thode de livraison" %}</h3>
+
+        {% bootstrap_form shipping_method_form show_label=False %}
+
+        <p class="text-right">
+            <button type="submit" class="btn button_type_12 r_corners bg_scheme_color color_light tr_delay_hover d_inline_b f_size_large">
+                {% trans "Payer" %}
+            </button>
+        </p>
+    </form>
+{% endblock %}

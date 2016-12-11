@@ -1,0 +1,67 @@
+form div[data-direction] {
+    padding: 0 1em;
+    vertical-align: middle;
+    line-height: 2em;
+    cursor: pointer;
+}
+
+.form-group .btn {
+    float: right;
+}
+
+.fa-stack-1x {
+    color: white;
+}
+
+.icon-facebook {
+    color: #3b5998;
+}
+
+.icon-gplus {
+    color: #dd4b39;
+}
+
+.icon-instagram {
+    color: whitesmoke;
+}
+
+.icon-instagram .fa-instagram {
+    color: #000;
+}
+
+.form-group .radio label {
+    line-height: 1.8em;
+}
+
+input[type=radio] {
+    height: 15px;
+    -webkit-appearance: radio;
+    -moz-appearance: radio;
+}
+
+#products div[itemscope] {
+    padding: 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+#products .photoframe {
+    margin-left: 1.4em;
+    width: 90%;
+}
+
+.brand {
+    font-family: 'Pacifico', cursive;
+}
+
+a.brand, a.brand:hover, a.brand:visited {
+    text-decoration: none;
+}
+
+a.brand.f_size_big {
+    font-size:2.5em;
+}
+
+.quantity input {
+    text-align: center;
+}

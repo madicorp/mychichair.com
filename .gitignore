@@ -11,3 +11,20 @@ __pycache__/
 # MacOS
 .DS_Store
 
+# Django mychichair
+media
+*.sqlite
+/static/
+build/
+dist/
+
+# shared dir
+data
+log
+
+# npm
+node_modules
+mychichair/static/assets/
+
+# Generated
+docker-compose.yml

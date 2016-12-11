@@ -1,8 +1,13 @@
+import os
+
 from fabric.colors import red, green, yellow
-from fabric.context_managers import settings, shell_env, hide
+from fabric.context_managers import settings, hide
 from fabric.operations import local
 
-line = red('#' * 74)
+_line = red('#' * 74)
+_default_pwd = 'changeme'
+_data_dir = '/var/data'
+_log_dir = '/var/log'
 
 
 def _stop_and_remove_containers():
@@ -15,23 +20,34 @@ def _build_web_container():
     local("docker-compose build")
 
 
-def _run_web_container():
-    local("docker-compose up -d")
+def _build_docker_compose_file(media_dir, data_dir, log_dir):
+    os.environ['MEDIA_DIR'] = media_dir
+    os.environ['LOG_DIR'] = log_dir
+    os.environ['DATA_DIR'] = data_dir
+    with open('docker-compose.tmplt.yml', 'r') as templated_file, \
+            open('docker-compose.yml', 'w') as output_file:
+        for templated_line in templated_file:
+            output_file.writelines(os.path.expandvars(templated_line))
 
 
 def launch_local():
-    _build_web_container()
-    _stop_and_remove_containers()
-    with shell_env(DJANGO_SETTINGS_MODULE="mychichair.settings.local"):
-        _run_web_container()
+    local("./docker/mychichair/docker-entrypoint.sh")
 
 
-def launch_prod_local(contact_email, contact_email_pwd):
+def launch_prod_local(contact_email, contact_email_pwd, postgres_user='admin', postgre_pwd=_default_pwd,
+                      secret_key=_default_pwd, media_dir='./media', data_dir='./data', log_dir='./log'):
+    _build_docker_compose_file(media_dir, data_dir, log_dir)
     _build_web_container()
     _stop_and_remove_containers()
-    with shell_env(DJANGO_SETTINGS_MODULE="mychichair.settings.prod", CONTACT_EMAIL=contact_email,
-                   CONTACT_EMAIL_PASSWORD=contact_email_pwd):
-        _run_web_container()
+    db_url = 'postgres://{0}:{1}@db/{0}'.format(postgres_user, postgre_pwd)
+    os.environ['CONTACT_EMAIL'] = contact_email
+    os.environ['CONTACT_EMAIL_PASSWORD'] = contact_email_pwd
+    os.environ['DATABASE_URL'] = db_url
+    os.environ['DEFAULT_FROM_EMAIL'] = contact_email
+    os.environ['SECRET_KEY'] = secret_key
+    os.environ['DEBUG'] = 'False'
+    os.environ['ALLOWED_HOSTS'] = 'mychichair.com'
+    local("docker-compose up -d")
 
 
 def _get_result(cmd: str = 'echo "Hello, World!'):
@@ -50,14 +66,15 @@ def _is_my_chic_hair_com_active():
             return True
         elif mychichair_com_machine.find('Running') != -1 and mychichair_com_machine.find('-') != -1:
             print(yellow('Warning: Default machine running but not active'))
-            print(line)
+            print(_line)
             print(' > eval $(docker-machine env mychichair.com)')
-            print(line)
+            print(_line)
     else:
         print(yellow('Create Digital Ocean docker machine for deployment'))
     return False
 
 
-def launch_prod_digital_ocean(contact_email, contact_email_pwd):
+def launch_prod_digital_ocean(contact_email, contact_email_pwd, postgres_user, postgre_pwd, secret_key):
     if _is_my_chic_hair_com_active():
-        launch_prod_local(contact_email, contact_email_pwd)
+        launch_prod_local(contact_email, contact_email_pwd, postgres_user, postgre_pwd, secret_key,
+                          '{}/mychichair/media'.format(_data_dir), _data_dir, _log_dir)

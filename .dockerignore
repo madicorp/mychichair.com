@@ -8,3 +8,12 @@ fabfile.py
 docker-compose.yml
 __pycache__/
 .DS_Store
+node_modules
+tests
+
+# shared dir
+data
+log
+media
+
+mychichair/static/assets

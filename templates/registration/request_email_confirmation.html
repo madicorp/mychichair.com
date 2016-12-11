@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load i18n %}
+
+{% block title %}{% trans "S&rsquo;inscrire ou R&eacute;initialiser son mot de passe" %} — {{ block.super }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="m_right_10 current">
+        <a href="/" class="default_t_color">
+            {% trans "Accueil" %}
+            <i class="fa fa-angle-right d_inline_middle m_left_10"></i>
+        </a>
+    </li>
+    <li><a href="." class="default_t_color">{% trans "S&rsquo;inscrire ou R&eacute;initialiser son mot de passe" %}</a></li>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>{% trans "S&rsquo;inscrire ou R&eacute;initialiser son mot de passe" %}</legend>
+                        {% bootstrap_form form %}
+                        <input type="hidden" name="next" value="{{ next }}" />
+                    </fieldset>
+                    <div class="form-group text-right">
+                        <button class="btn button_type_6 bg_scheme_color f_size_large r_corners tr_all_hover color_light m_bottom_20">
+                            {% trans "Continuer" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

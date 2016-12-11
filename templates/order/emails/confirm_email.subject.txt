@@ -1,0 +1,2 @@
+{% load i18n %}
+{% trans "D&eacute;tails de votre commande" %}

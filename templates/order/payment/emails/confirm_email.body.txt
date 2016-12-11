@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% block content %}{% blocktrans %}Bonjour.
+
+Nous vous remercions pour votre paiement. Pour voir les détails de votre paiement :
+{{ order_url }}
+
+Chiquement votre,
+MyChicHair{% endblocktrans %}{% endblock %}

@@ -1,0 +1,42 @@
+language: python
+cache:
+  pip: true
+  directories:
+    - node_modules
+sudo: false
+install:
+  - pip install -U pip setuptools wheel
+  - pip install tox codecov
+  - nvm install 4.4.7
+  - npm install
+  - npm prune
+  - npm run build-assets
+script:
+  - tox
+env:
+  global:
+    - DJANGO_SETTINGS_MODULE=tests.settings
+  matrix:
+    - TOXENV=py27-django18
+    - TOXENV=py27-django110
+    - TOXENV=py27-django_master
+    - TOXENV=py34-django18
+    - TOXENV=py34-django110
+    - TOXENV=py34-django_master
+    - TOXENV=py35-django18
+    - TOXENV=py35-django110
+    - TOXENV=py35-django_master
+matrix:
+  allow_failures:
+    - env: TOXENV=py27-django_master
+    - env: TOXENV=py34-django_master
+    - env: TOXENV=py35-django_master
+after_success:
+  - codecov
+addons:
+  apt:
+    sources:
+      - deadsnakes
+    packages:
+      - python3.5
+      - python3.5-dev
