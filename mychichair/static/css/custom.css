@@ -65,3 +65,7 @@ a.brand.f_size_big {
 .quantity input {
     text-align: center;
 }
+
+a.color_scheme {
+    color: #FF1654;
+}

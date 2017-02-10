@@ -40,7 +40,7 @@ google-measurement-protocol==0.1.6
 gunicorn==19.6.0
 idna==2.1                 # via cryptography
 jsonfield==1.0.3
-lxml==3.6.4               # via premailer
+lxml==3.7.0               # via premailer
 Markdown==2.6.7
 maxminddb-geolite2==2015.708
 maxminddb==1.2.1

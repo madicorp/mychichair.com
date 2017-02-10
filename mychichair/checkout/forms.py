@@ -55,7 +55,7 @@ class ShippingMethodForm(forms.Form):
     method = ShippingCountryChoiceField(
         queryset=ShippingMethodCountry.objects.select_related(
             'shipping_method').order_by('price').all(),
-        label=_('Shipping method'), required=True)
+        label=_('Méthode de livraison'), required=True)
 
     def __init__(self, country_code, *args, **kwargs):
         super(ShippingMethodForm, self).__init__(*args, **kwargs)

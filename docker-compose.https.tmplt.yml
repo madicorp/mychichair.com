@@ -1,0 +1,112 @@
+version: '2'
+
+services:
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/nginx/conf.d"
+      - "/etc/nginx/vhost.d"
+      - "/usr/share/nginx/html"
+      - "$DATA_DIR/proxy/certs:/etc/nginx/certs:ro"
+    networks:
+      - proxy-tier
+
+  nginx-gen:
+    image: jwilder/docker-gen
+    container_name: nginx-gen
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "./docker/nginx/proxy/templates/nginx-compose-v2.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro"
+    volumes_from:
+      - nginx
+    entrypoint: /usr/local/bin/docker-gen -notify-sighup nginx -watch -only-exposed -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-nginx-proxy-companion
+    volumes_from:
+      - nginx
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "$DATA_DIR/nginx/proxy/certs:/etc/nginx/certs:rw"
+    environment:
+      - NGINX_DOCKER_GEN_CONTAINER=nginx-gen
+
+  mychichair-nginx:
+    restart: always
+    build: ./docker/nginx/
+    ports:
+      - 80:8080
+    volumes:
+      - $MEDIA_DIR:/www/media
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - $LOG_DIR/nginx:/var/log/nginx
+    volumes_from:
+      - mychichair
+    environment:
+      - VIRTUAL_HOST=$SITE_DOMAIN
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=$SITE_DOMAIN
+      - LETSENCRYPT_EMAIL=$ADMIN_EMAIL
+    links:
+      - mychichair:web
+
+  mychichair:
+    restart: always
+    build:
+      context: .
+    command: ./docker/mychichair/docker-entrypoint.sh
+    volumes:
+      - /usr/src/mychichair/static
+      - $MEDIA_DIR:/usr/src/mychichair/media
+      - $LOG_DIR/mychichair:/var/log/mychichair
+    environment:
+      - DATABASE_URL
+      - DEFAULT_FROM_EMAIL
+      - OPENEXCHANGERATES_API_KEY
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY
+      - DEBUG
+      - ALLOWED_HOSTS
+      - CONTACT_EMAIL
+      - CONTACT_EMAIL_PASSWORD
+      - ADMIN_NAME
+      - ADMIN_EMAIL
+      - POPULATE_DB
+      - SITE_DOMAIN
+    links:
+      - db
+      - redis
+    ports:
+      - 8000:8000
+
+  db:
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - 5432:5432
+    volumes:
+      - $DATA_DIR/postgresql:/var/lib/postgresql/data/
+      - $LOG_DIR/postgresql:/var/log/postgresql
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - $DATA_DIR/redis:/data
+      - $LOG_DIR/redis:/var/log/redis
+
+networks:
+  proxy-tier:
+    external:
+      name: nginx-proxy

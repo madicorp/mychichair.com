@@ -14,7 +14,7 @@
                     <span class="text-success">{{ discount.name }}</span>
                     <button type="submit"
                             class="btn btn-link btn-xs"
-                            aria-label="{% trans "Remove" %}">
+                            aria-label="{% trans "Effacer" %}">
                             {% bootstrap_icon "remove" %}
                     </button>
                 </form>
@@ -27,7 +27,7 @@
                       method="post" class="form-inline">
                     {% csrf_token %}
                     <td class="noborder form-group">{% bootstrap_field form.voucher show_label=False form_group_class="" %}</td>
-                    <td class="noborder text-right">{% bootstrap_button _("Apply") button_type="submit" button_class="btn-default" %}</td>
+                    <td class="noborder text-right">{% bootstrap_button _("Appliquer") button_type="submit" button_class="btn-default" %}</td>
                 </form>
         {% endif %}
     </tr>

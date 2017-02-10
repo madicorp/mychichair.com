@@ -1,24 +1,23 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Voucher, NotApplicable
 
 
 class VoucherField(forms.ModelChoiceField):
-
     default_error_messages = {
         'invalid_choice': pgettext_lazy(
             'voucher', pgettext_lazy(
-                'voucher', 'Discount code incorrect or expired')),
+                'voucher', _('Voucher incorrect ou expiré'))),
     }
 
 
 class CheckoutDiscountForm(forms.Form):
-
     voucher = VoucherField(
         queryset=Voucher.objects.active(), to_field_name='code',
-        label=pgettext_lazy('voucher', 'Gift card or discount code'),
-        widget=forms.TextInput)
+        label=pgettext_lazy('voucher', _('Carte cadeau ou code promotionnel')),
+        widget=forms.TextInput({'placeholder': _('Coupon')}))
 
     def __init__(self, *args, **kwargs):
         self.checkout = kwargs.pop('checkout')

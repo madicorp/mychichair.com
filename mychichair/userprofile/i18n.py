@@ -12,7 +12,6 @@ from .models import Address
 COUNTRY_FORMS = {}
 UNKNOWN_COUNTRIES = set()
 
-
 AREA_TYPE_TRANSLATIONS = {
     'area': pgettext_lazy('Address field', 'Area'),
     'county': pgettext_lazy('Address field', 'County'),
@@ -51,7 +50,6 @@ class AddressMetaForm(forms.ModelForm):
 
 
 class AddressForm(forms.ModelForm):
-
     AUTOCOMPLETE_MAPPING = (
         ('first_name', 'given-name'),
         ('last_name', 'family-name'),
@@ -86,7 +84,6 @@ class AddressForm(forms.ModelForm):
 
 
 class CountryAwareAddressForm(AddressForm):
-
     I18N_MAPPING = (
         ('name', ['first_name', 'last_name']),
         ('street_address', ['street_address_1', 'street_address_2']),
@@ -114,6 +111,7 @@ class CountryAwareAddressForm(AddressForm):
                         'Address form',
                         'Cette valeur est invalide pour le pays sélectionné')
                 self.add_error(field, error_msg)
+                print(field, error_msg)
 
     def validate_address(self, data):
         try:

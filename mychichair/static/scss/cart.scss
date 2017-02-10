@@ -1,5 +1,9 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
 
+body {
+	background: #1C2541 fixed;
+}
+
 .cart {
 	> tbody {
 		> .cart-item {

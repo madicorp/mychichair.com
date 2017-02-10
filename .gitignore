@@ -13,6 +13,7 @@ __pycache__/
 
 # Django mychichair
 media
+_media
 *.sqlite
 /static/
 build/
@@ -28,3 +29,4 @@ mychichair/static/assets/
 
 # Generated
 docker-compose.yml
+webpack-bundle.json

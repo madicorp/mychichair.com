@@ -26,9 +26,9 @@
 
 {% block content %}
     {% if not user.is_authenticated %}
-        <p class="alert alert-info">
+        <p class="alert alert-scheme">
             {% trans "Avez-vous d&eacute;j&agrave; un compte ?" %}
-            <a href="{% url "registration:login" %}?next={{ request.get_full_path }}">
+            <a href="{% url "registration:login" %}?next={{ request.get_full_path }}" class="color_scheme">
                 {% trans "S'enregistrer" %}
             </a>
         </p>
@@ -45,18 +45,18 @@
                 </li>
                 <li>
                     <div class="nav-wedge"></div>
-                    <a href="{% url "checkout:shipping-address" %}">{% trans "Adresse de livraison" %}</a>
+                    <a href="{% url "checkout:shipping-address" %}">{% trans "Coordonnées de livraison" %}</a>
                     <div class="nav-arrow"></div>
                 </li>
                 {# TODO enlever la méthode de livraison #}
                 <li>
                     <div class="nav-wedge"></div>
-                    <a href="{% url "checkout:shipping-method" %}">{% trans "Shipping method" %}</a>
+                    <a href="{% url "checkout:shipping-method" %}">{% trans "Méthode de livraison" %}</a>
                     <div class="nav-arrow"></div>
                 </li>
                 <li>
                     <div class="nav-wedge"></div>
-                    <a href="{% url "checkout:summary" %}">{% trans "Summary" %}</a>
+                    <a href="{% url "checkout:summary" %}">{% trans "Résumé" %}</a>
                 </li>
             </ul>
             {% endblock steps_menu %}
@@ -83,7 +83,7 @@
 
                     <tr>
                         <td>
-                            {% trans "Subtotal" %}
+                            {% trans "Sous-total" %}
                         </td>
                         <td class="text-right">
                             {% net checkout.get_subtotal %}
@@ -94,7 +94,7 @@
 
                     <tr>
                         <td class="noborder">
-                            {% trans "Shipping" %}
+                            {% trans "Livraison" %}
                         </td>
                         <td class="noborder text-right">
                             {% if checkout.shipping_method %}

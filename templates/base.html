@@ -67,9 +67,9 @@
                             <div class="col-lg-8 col-md-8 col-sm-10 t_xs_align_c">
                                 <p class="f_size_small">
                                     Bienvenue, vous pouvez
-                                    <a href="#" data-popup="#login_popup">Accéder à votre compte</a>
+                                    <a href="#" data-popup="#login_popup" class="color_scheme">Accéder à votre compte</a>
                                     ou
-                                    <a href="{% url "registration:login" %}">Vous inscrire</a>
+                                    <a href="{% url "registration:login" %}" class="color_scheme">Vous inscrire</a>
                                 </p>
                             </div>
                         {% endif %}
@@ -323,12 +323,12 @@
                                     </a>
                                 </li>
                                 {# TODO contact page #}
-                                <li class="envelope m_left_5 m_bottom_5 relative">
-                                    <span class="tooltip tr_all_hover r_corners color_dark f_size_small">Contact</span>
-                                    <a href="#" class="r_corners f_size_ex_large t_align_c tr_delay_hover">
-                                        <i class="fa fa-envelope-o"></i>
-                                    </a>
-                                </li>
+                                {#                                <li class="envelope m_left_5 m_bottom_5 relative">#}
+                                {#                                    <span class="tooltip tr_all_hover r_corners color_dark f_size_small">Contact</span>#}
+                                {#                                    <a href="#" class="r_corners f_size_ex_large t_align_c tr_delay_hover">#}
+                                {#                                        <i class="fa fa-envelope-o"></i>#}
+                                {#                                    </a>#}
+                                {#                                </li>#}
                             </ul>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 m_xs_bottom_30">
@@ -359,27 +359,28 @@
                             {% endif %}
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 m_xs_bottom_30">
-                            <h3 class="color_light_2 m_bottom_20">Informations</h3>
-                            <ul class="vertical_list">
-                                <li>
-                                    <a class="color_light tr_delay_hover" href="#">
-                                        &Agrave; propos de nous
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="color_light tr_delay_hover" href="#">
-                                        Politique de confidentialit&eacute;
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="color_light tr_delay_hover" href="#">
-                                        Conditions d&rsquo;utilisation
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
+                            {# TODO information #}
+                            {#                            <h3 class="color_light_2 m_bottom_20">Informations</h3>#}
+                            {#                            <ul class="vertical_list">#}
+                            {#                                <li>#}
+                            {#                                    <a class="color_light tr_delay_hover" href="#">#}
+                            {#                                        &Agrave; propos de nous#}
+                            {#                                        <i class="fa fa-angle-right"></i>#}
+                            {#                                    </a>#}
+                            {#                                </li>#}
+                            {#                                <li>#}
+                            {#                                    <a class="color_light tr_delay_hover" href="#">#}
+                            {#                                        Politique de confidentialit&eacute;#}
+                            {#                                        <i class="fa fa-angle-right"></i>#}
+                            {#                                    </a>#}
+                            {#                                </li>#}
+                            {#                                <li>#}
+                            {#                                    <a class="color_light tr_delay_hover" href="#">#}
+                            {#                                        Conditions d&rsquo;utilisation#}
+                            {#                                        <i class="fa fa-angle-right"></i>#}
+                            {#                                    </a>#}
+                            {#                                </li>#}
+                            {#                            </ul>#}
                         </div>
                     </div>
                 </div>
@@ -390,7 +391,7 @@
                     <p class="f_left f_mxs_none m_mxs_bottom_10">&copy; 2016 <span
                             class="color_light brand">MyChicHair</span>.
                         All Rights Reserved.
-                        Powered by <a href="http://madi-corp.net">Madicorp</a>
+                        Powered by <a href="http://madi-corp.net" class="color_scheme">Madicorp</a>
                     </p>
                 </div>
             </div>

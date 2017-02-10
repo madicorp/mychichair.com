@@ -9,8 +9,8 @@ class Status(object):
     FULLY_PAID = 'fully-paid'
 
     CHOICES = [
-        (NEW, pgettext_lazy('order status', 'Processing')),
-        (CANCELLED, pgettext_lazy('order status', 'Cancelled')),
-        (SHIPPED, pgettext_lazy('order status', 'Shipped')),
-        (PAYMENT_PENDING, pgettext_lazy('order status', 'Payment pending')),
-        (FULLY_PAID, pgettext_lazy('order status', 'Fully paid'))]
+        (NEW, pgettext_lazy('order status', 'En traitement')),
+        (CANCELLED, pgettext_lazy('order status', 'Annulé')),
+        (SHIPPED, pgettext_lazy('order status', 'Envoyé')),
+        (PAYMENT_PENDING, pgettext_lazy('order status', 'Paiement en cours')),
+        (FULLY_PAID, pgettext_lazy('order status', 'Payé complètement'))]

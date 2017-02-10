@@ -1,3 +1,4 @@
+# coding: utf-8
 from __future__ import unicode_literals
 
 import ast
@@ -17,6 +18,8 @@ else:
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
 SITE_ID = 1
+
+SITE_DOMAIN = os.environ.get('SITE_DOMAIN', "localhost:8000")
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -82,7 +85,8 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 ]
 
 context_processors = [
@@ -275,7 +279,7 @@ BOOTSTRAP3 = {
 
 TEST_RUNNER = ''
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split()
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(",")
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 

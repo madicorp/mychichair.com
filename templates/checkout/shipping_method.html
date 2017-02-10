@@ -12,7 +12,7 @@
         </a>
         <a href="{% url "checkout:shipping-address" %}">
             <div class="nav-wedge"></div>
-            {% trans "Adresse de livraison" %}
+            {% trans "Coordonnées" %}
             <div class="nav-arrow"></div>
         </a>
         <a class="active" href="{% url "checkout:shipping-method" %}">
@@ -30,10 +30,10 @@
 
 {% block forms %}
     <div class="page-header">
-        <h3>{% trans "Adresse de livraison" %}</h3>
+        <h3>{% trans "Coordonnées" %}</h3>
     </div>
 
-    {% include "userprofile/snippets/address-details.html" with address=checkout.shipping_address only %}
+    {% comment %}{% include "userprofile/snippets/address-details.html" with address=checkout.shipping_address only %}{% endcomment %}
 
     <form method="post" novalidate>
         {% csrf_token %}
@@ -42,8 +42,9 @@
         {% bootstrap_form shipping_method_form show_label=False %}
 
         <p class="text-right">
-            <button type="submit" class="btn button_type_12 r_corners bg_scheme_color color_light tr_delay_hover d_inline_b f_size_large">
-                {% trans "Payer" %}
+            <button type="submit"
+                    class="btn button_type_12 r_corners bg_scheme_color color_light tr_delay_hover d_inline_b f_size_large">
+                {% trans "Continuer" %}
             </button>
         </p>
     </form>

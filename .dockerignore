@@ -1,19 +1,26 @@
 venv
 .idea
-*.sqlite3
+*.sqlite*
 README.adoc
 fabfile.py
 .gitignore
 .git
 docker-compose.yml
-__pycache__/
+__pycache__
 .DS_Store
 node_modules
 tests
+*.tmplt.yml
+.travis.yml
+runtime.txt
+build/cache/node_modules
+build/cache/npm
 
-# shared dir
+# local shared dir
 data
 log
 media
+_media
 
 mychichair/static/assets
+*.docker

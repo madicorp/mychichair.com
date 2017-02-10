@@ -1,27 +1,23 @@
 version: '2'
 
 services:
-  db:
+  mychichair_proxy:
+    container_name: mychichair_proxy
     restart: always
-    image: postgres
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
+    build: ./docker/nginx/
     ports:
-      - 5432:5432
+      - 80:8080
     volumes:
-      - $DATA_DIR/postgresql:/var/lib/postgresql/data/
-      - $LOG_DIR/postgresql:/var/log/postgresql
-
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - $DATA_DIR/redis:/data
-      - $LOG_DIR/redis:/var/log/redis
+      - $MEDIA_DIR:/www/media
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - $LOG_DIR/nginx:/var/log/nginx
+    volumes_from:
+      - mychichair
+    links:
+      - mychichair:web
 
   mychichair:
+    container_name: mychichair_main
     restart: always
     build:
       context: .
@@ -42,23 +38,32 @@ services:
       - CONTACT_EMAIL_PASSWORD
       - ADMIN_NAME
       - ADMIN_EMAIL
-
+      - POPULATE_DB
+      - SITE_DOMAIN
     links:
       - db
       - redis
     ports:
       - 8000:8000
 
-  nginx:
+  db:
+    container_name: mychichair_db
     restart: always
-    build: ./docker/nginx/
+    image: postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
     ports:
-      - 80:8080
+      - 5432:5432
     volumes:
-      - $MEDIA_DIR:/www/media
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - $LOG_DIR/nginx:/var/log/nginx
-    volumes_from:
-      - mychichair
-    links:
-      - mychichair:web
+      - $DATA_DIR/postgresql:/var/lib/postgresql/data/
+      - $LOG_DIR/postgresql:/var/log/postgresql
+
+  redis:
+    container_name: mychichair_redis
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - $DATA_DIR/redis:/data
+      - $LOG_DIR/redis:/var/log/redis

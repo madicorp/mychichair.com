@@ -89,11 +89,10 @@ html,body{
 body{
 	font:300 14px/21px 'Roboto', 'sans-serif';
 	color:#696e6e;
-	background:#232830;
 	letter-spacing: 0.1px;
 	overflow-x: hidden;
 	-webkit-backface-visibility:hidden;
-	background-attachment:fixed;
+	background: #1C2541 fixed;
 }
 .boxed_layout{
 	width:1220px;
@@ -419,23 +418,23 @@ body{
 	box-shadow:0 1px 1px rgba(0,0,0,.10);
 }
 mark{
-	background: #e74c3c;
+	background: #FF1654;
 	color:#fff;
 }
 ::selection{
-	background: #e74c3c;
+	background: #FF1654;
 	color:#fff;
 }
 ::-moz-selection{
-	background: #e74c3c;
+	background: #FF1654;
 	color:#fff;	
 }
 ::-o-selection {
-	background: #e74c3c;
+	background: #FF1654;
 	color:#fff;	
 }
 ::-ms-selection {
-	background: #e74c3c;
+	background: #FF1654;
 	color:#fff;
 }
 ::-webkit-input-placeholder{
@@ -450,7 +449,7 @@ mark{
 }
 ::-webkit-scrollbar{
 	width:10px;
-	background:#323a45;
+	background:#0B132B;
 }
 ::-webkit-scrollbar-thumb{
 	-webkit-border-radius:4px;
@@ -473,14 +472,14 @@ a,a[class*="color"]:not(.color_light):hover,.scheme_color,.close_product:hover,
 .close_fieldset:hover,.text_cs_hover:hover,.tweet_list a:hover,[class*="alert_box"].error i[class^="fa "],
 label[class*="required"]:after,.vertical_list_type_7 li:before,.first_letter_1 > .fl,
 .info_block_type_1:hover [class*="icon_wrap"]{
-	color:#e74c3c;
+	color:#FF1654;
 }
 .shopping_cart,[role="banner"],.sub_menu_wrap,.banner_type_2.red,
 .vertical_list_type_3 li:before,.vertical_list_type_7 li:before{
-	border-color:#e74c3c;	
+	border-color:#FF1654;
 }
 .shopping_cart:before,.sub_menu_wrap:before{
-	border-bottom-color:#e74c3c;
+	border-bottom-color:#FF1654;
 }
 .count,.bg_scheme_color,.button_type_3:hover .count.type_2,
 .button_type_3.active .count.type_2,.md_no-touch .main_menu > li:hover > a,.main_menu > li.current > a,
@@ -496,16 +495,16 @@ label[class*="required"]:after,.vertical_list_type_7 li:before,.first_letter_1 >
 .camera_wrap .camera_prev:hover, .camera_wrap .camera_next:hover,.flex-control-nav .flex-active,
 .flex-direction-nav a:hover,.vertical_list_type_4 li:before,.vertical_list_type_8 li:before,
 .first_letter_2 > .fl,.info_block_type_2:hover [class*="icon_wrap"],#shopping_button:hover > a .count{
-	background:#e74c3c;
+	background:#FF1654;
 }
 .select_color.red{
-	background-color:#e74c3c;	
+	background-color:#FF1654;
 }
 .tp-leftarrow:hover,.tp-rightarrow:hover{
 	background: #d55a4e
 }
 ::-webkit-scrollbar-thumb{
-	background:#e74c3c;	
+	background:#FF1654;
 }
 
 /* -----------------------------------
@@ -547,7 +546,7 @@ a,.tr_hover{
 .button_type_2.active .scheme_color,.md_no-touch a.color_light:hover,.social_icons li:hover a,.bg_cs_hover:hover,
 [class*="button_type_"][class*="color"].color_dark:hover,.main_menu[class*="type_"] > .current > a,
 .md_no-touch .main_menu[class*="type_"] > li:hover > a,.main_menu[class*="type_"] > .touch_open_sub > a,.vertical_list_type_8 li:before{
-	color:#fff;
+	color:#E8EDDF;
 }
 .color_light_2{
 	color:#f9f9f9;
@@ -721,7 +720,7 @@ blockquote:after{
 	border-radius:4px 4px 0 0;
 }
 .menu_wrap,#footer{
-	background:#323a45;
+	background:#0B132B;
 }
 .menu_wrap.type_2:not(.sticky) .main_menu > li:first-child > a{
 	-webkit-border-top-left-radius:4px;
@@ -2128,7 +2127,7 @@ i[class^="fa "]{
 	display:block;
 	width:39.5px;
 	height:40px;
-	color:#838a8f;
+	color:#E8EDDF;
 }
 .social_icons li a i[class^="fa "]{
 	line-height: 40px;
@@ -3102,7 +3101,7 @@ fieldset legend .close_fieldset{
 ------------------------------------- */
 
 #footer{
-	color:#bdc3c7;
+	color:#E8EDDF;
 	padding:45px 0 0;
 }
 #footer.type_2{
@@ -3115,9 +3114,9 @@ fieldset legend .close_fieldset{
 	padding-bottom:45px;
 }
 .footer_bottom_part{
-	background:#292f38;
+	background:#525174;
 	padding:24px 0 22px;
-	color:#696e6e;
+	color:#E8EDDF;
 }
 
 /* -----------------------------------
@@ -3806,13 +3805,13 @@ fieldset legend .close_fieldset{
 	}
 	.main_menu > li > a{
 		background:#fff;
-		color:#e74c3c;
+		color:#FF1654;
 		-webkit-border-radius:4px;
 		-moz-border-radius:4px;
 		border-radius:4px;
 		text-transform: none;
 		padding:10px 15px;
-		border:1px solid #e74c3c;
+		border:1px solid #FF1654;
 	}
 	.main_menu > li.current > a,
 	.md_no-touch .main_menu > li:hover > a,

@@ -1,19 +1,24 @@
 #!/bin/bash
 
 BASEDIR=$(dirname "$0")
-if [ -z ${POSTGRES_1_PORT_5432_TCP_ADDR+x} ]; then
-python manage.py makemigrations && python manage.py migrate --noinput
+if [ -z ${DATABASE_URL+x} ]; then
+    echo "Making the migrations against sqlite"
+    python manage.py makemigrations && python manage.py migrate --noinput
 else
-$BASEDIR/wait-for-it.sh "$POSTGRES_1_PORT_5432_TCP_ADDR:$POSTGRES_1_PORT_5432_TCP_PORT" && \
-$BASEDIR/wait-for-it.sh "$MYCHICHAIR_REDIS_1_PORT_5634_TCP_ADDR:$MYCHICHAIR_REDIS_1_PORT_5634_TCP_PORT" && \
-python manage.py makemigrations && python manage.py migrate --noinput
+    echo "Waiting for connection before making the migrations"
+    waitforit --host=db --port=5432 --timeout=15 && waitforit --host=redis --port=6379 --timeout=10\
+    && python manage.py makemigrations && python manage.py migrate --noinput
 fi
 
-if [ -z ${POPULATE_DB} ]; then
+if [ -z ${POPULATE_DB+x} ]; then
+    echo "Not populating the DB"
+else
     python manage.py populatedb
 fi
 
-if [ -z ${POSTGRES_1_PORT_5432_TCP_ADDR+x} ]; then
+python manage.py install_site
+
+if [ -z ${DATABASE_URL+x} ]; then
 python manage.py runserver 0.0.0.0:8000
 else
 gunicorn mychichair.wsgi --bind 0.0.0.0:8000

@@ -31,7 +31,7 @@
         <div class="col-sm-8">
             {% if order.user == user or not order.is_fully_paid %}
                 {% if not order.is_fully_paid %}
-                    <div class="panel panel-info">
+                    <div class="panel panel-info color-scheme">
                         {% if waiting_payment %}
                             <div class="panel-heading">
                                 {% trans "Paiement en attente" %}
@@ -59,15 +59,15 @@
                                     {{ payment_form }}
                                     <div class="form-group text-right">
                                         {% block form_submit %}
-                                            <button type="submit" class="btn btn-primary">
-                                                {% trans "Proc&eacute;der au paiement" %}
+                                            <button type="submit" class="btn btn-primary color-scheme">
+                                                {% trans "Confirmer la commande" %}
                                             </button>
                                         {% endblock %}
                                     </div>
                                 </form>
                             </div>
                         {% else %}
-                            <div class="panel-body alert-info">
+                            <div class="panel-body alert-info color-scheme">
                                 <span>{% trans "Votre transaction a &eacute;t&eacute; accept&eacute;e. Votre commande est en cours de traitement." %}</span>
                             </div>
                         {% endif %}

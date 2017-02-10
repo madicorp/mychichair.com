@@ -10,8 +10,8 @@ from django.views.generic import ListView
 from django_prices.templatetags.prices_i18n import gross
 from prices import Price
 
+from mychichair.userprofile.i18n import AddressForm
 from ...order.models import Order, OrderedItem, OrderNote
-from ...userprofile.forms import AddressForm
 from ..views import (FilterByStatusMixin, StaffMemberOnlyMixin,
                      staff_member_required)
 from .forms import (CancelItemsForm, CancelOrderForm, CapturePaymentForm,
