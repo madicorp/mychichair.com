@@ -8,13 +8,16 @@ services:
     ports:
       - 80:8080
     volumes:
-      - $MEDIA_DIR:/www/media
+      - ./media:/www/media
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - $LOG_DIR/nginx:/var/log/nginx
     volumes_from:
       - mychichair
     links:
       - mychichair:web
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
 
   mychichair:
     container_name: mychichair_main
@@ -24,8 +27,7 @@ services:
     command: ./docker/mychichair/docker-entrypoint.sh
     volumes:
       - /usr/src/mychichair/static
-      - $MEDIA_DIR:/usr/src/mychichair/media
-      - $LOG_DIR/mychichair:/var/log/mychichair
+      - ./media:/usr/src/mychichair/media
     environment:
       - DATABASE_URL
       - DEFAULT_FROM_EMAIL
@@ -45,6 +47,10 @@ services:
       - redis
     ports:
       - 8000:8000
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
 
   db:
     container_name: mychichair_db
@@ -56,8 +62,11 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - $DATA_DIR/postgresql:/var/lib/postgresql/data/
-      - $LOG_DIR/postgresql:/var/log/postgresql
+      - ./data/postgresql:/var/lib/postgresql/data/
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
 
   redis:
     container_name: mychichair_redis
@@ -65,5 +74,8 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - $DATA_DIR/redis:/data
-      - $LOG_DIR/redis:/var/log/redis
+      - ./data/redis:/data
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"

@@ -12,29 +12,13 @@ _default_pwd = 'changeme'
 _data_dir = '/var/data'
 _log_dir = '/var/log'
 _default_domain = 'localhost:8000'
-_docker_compose_filename = 'docker-compose.tmplt.yml'
+_local_docker_compose_filename = 'docker-compose.local.yml'
 _docker_compose_https_filename = 'docker-compose.https.tmplt.yml'
+_mychichair_fluentd = 'mychichair_fluentd'
 
 
-def _build_web_container():
-    local("docker-compose build")
-
-
-def build_docker_compose_file(media_dir, data_dir, log_dir, admin_email, site_domain=_default_domain,
-                              docker_compose_file_name=_docker_compose_filename):
-    _build_docker_compose_file(media_dir, data_dir, log_dir, admin_email, site_domain, docker_compose_file_name)
-
-
-def _build_docker_compose_file(media_dir, data_dir, log_dir, admin_email, site_domain=_default_domain,
-                               docker_compose_filename=_docker_compose_filename):
-    os.environ['MEDIA_DIR'] = media_dir
-    os.environ['LOG_DIR'] = log_dir
-    os.environ['DATA_DIR'] = data_dir
-    os.environ['SITE_DOMAIN'] = site_domain
-    os.environ['ADMIN_EMAIL'] = admin_email
-    with open(docker_compose_filename, 'r') as templated_file, open('docker-compose.yml', 'w') as output_file:
-        for templated_line in templated_file:
-            output_file.writelines(os.path.expandvars(templated_line))
+def _build_web_container(docker_compose_filename):
+    local("docker-compose -f {} build".format(docker_compose_filename))
 
 
 def launch_local():
@@ -50,23 +34,41 @@ def build_main_container_assets(node_modules_dir='{}/build/cache/node_modules'.f
     local('cp build/static/webpack-bundle.json webpack-bundle.json')
 
 
+def is_container_running(container_name_or_id):
+    inspect_container_result = _get_result('docker inspect -f {{{{.State.Running}}}} {}'.format(container_name_or_id))
+    container_running = inspect_container_result == 'true'
+    color_fn = green if container_running else red
+    print(color_fn('Is container "{}" running ? {}'.format(container_name_or_id, container_running)))
+    return container_running
+
+
+def _get_remote_mychichair_uid():
+    return run('id -u mychichair')
+
+
+def _launch_fluentd(is_local, log_dir):
+    if not is_container_running(_mychichair_fluentd):
+        with settings(hide('warnings', 'running', 'stdout', 'stderr'), warn_only=True):
+            local('docker rm {}'.format(_mychichair_fluentd))
+        get_user_id = os.getuid if is_local else _get_remote_mychichair_uid
+        local(
+            'docker run -d -p 24224:24224 -e USER=mychichair -e USERID={} -v {}:/fluentd/log --name {}'
+            ' fluent/fluentd'.format(_mychichair_fluentd, get_user_id(), log_dir))
+
+
 def launch_prod_local(contact_email, contact_email_pwd, admin_name=_default_admin_name,
                       admin_email=_default_admin_email, postgres_user='admin', postgres_pwd=_default_pwd,
-                      secret_key=_default_pwd, media_dir='./media', data_dir='./data', log_dir='./log',
-                      populatedb=False, node_modules_dir='{}/build/cache/node_modules'.format(_dir_path),
-                      static_dir='{0}/build/static'.format(_dir_path), docker_machine_name=None):
+                      secret_key=_default_pwd, populatedb=False,
+                      node_modules_dir='{}/build/cache/node_modules'.format(_dir_path),
+                      static_dir='{0}/build/static'.format(_dir_path), docker_machine_name=None,
+                      docker_compose_filename=_local_docker_compose_filename, log_dir='`pwd`/log/fluent'):
+    _launch_fluentd(docker_machine_name is None, log_dir)
+
     build_main_container_assets(node_modules_dir, static_dir)
-    docker_compose_filename = _docker_compose_filename
-    # TODO enable https
-    # if docker_machine_name:
-    #     docker_compose_filename = _docker_compose_https_filename
-    site_domain = _default_domain
-    if docker_machine_name:
-        site_domain = docker_machine_name
-    _build_docker_compose_file(media_dir, data_dir, log_dir, admin_email, site_domain, docker_compose_filename)
-    _build_web_container()
+    _build_web_container(docker_compose_filename)
     db_url = 'postgres://{0}:{1}@db/{0}'.format(postgres_user, postgres_pwd)
-    docker_compose_cmd = ('ADMIN_NAME="' + admin_name + '"')
+    # CMD begins with space to be ignored in history
+    docker_compose_cmd = (' ADMIN_NAME="' + admin_name + '"')
     docker_compose_cmd += (' ADMIN_EMAIL="' + admin_email + '"')
     docker_compose_cmd += (' CONTACT_EMAIL="' + contact_email + '"')
     docker_compose_cmd += (' CONTACT_EMAIL_PASSWORD="' + contact_email_pwd + '"')
@@ -85,7 +87,7 @@ def launch_prod_local(contact_email, contact_email_pwd, admin_name=_default_admi
         docker_compose_cmd += ' ALLOWED_HOSTS=mychichair.com'
     if populatedb:
         docker_compose_cmd += (' POPULATE_DB="' + str(populatedb) + '"')
-    docker_compose_cmd += " docker-compose up -d"
+    docker_compose_cmd += " docker-compose -f {} up -d".format(docker_compose_filename)
     local(docker_compose_cmd)
 
 
@@ -134,23 +136,25 @@ def install_node_and_modules_on_digital_ocean():
         npm_version = run('npm --version')
     if npm_version.failed:
         # Install node and npm if not present
-        run('curl -sL https://deb.nodesource.com/setup_6.x | bash -')
+        run('curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -')
         run('sudo apt-get install nodejs')
 
-    run('cd /tmp/mychichair/node_cache && npm install')
+    run('cd /tmp/mychichair/node_cache && sudo npm install')
 
 
 def _launch_on_digital_ocean(docker_machine_name, contact_email, contact_email_pwd, admin_name, admin_email,
                              postgres_user, postgres_pwd, secret_key, populatedb=False):
     install_node_and_modules_on_digital_ocean()
     if _is_docker_machine_active(docker_machine_name):
+        # TODO enable https
         launch_prod_local(contact_email, contact_email_pwd, admin_name, admin_email, postgres_user, postgres_pwd,
-                          secret_key, '{}/mychichair/media'.format(_data_dir), _data_dir, _log_dir, populatedb,
+                          secret_key, populatedb,
                           # static are copied on remote home directory
-                          '/tmp/mychichair/node_cache/node_modules', '/root/build/static', docker_machine_name)
+                          '/tmp/mychichair/node_cache/node_modules', '/root/build/static', docker_machine_name,
+                          'docker-compose.cloud.yml', '/var/log/fluent')
 
 
 def create_super_user(user_email):
     create_super_user_cmd = \
-        'docker exec -i -t mychichaircom_mychichair_1 python manage.py createsuperuser --email {}'.format(user_email)
+        'docker exec -i -t mychichair_main python manage.py createsuperuser --email {}'.format(user_email)
     local(create_super_user_cmd)

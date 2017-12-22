@@ -1,0 +1,81 @@
+version: '2'
+
+services:
+  mychichair_proxy:
+    container_name: mychichair_proxy
+    restart: always
+    build: ./docker/nginx/
+    ports:
+      - 80:8080
+    volumes:
+      - /var/data/mychichair/media:/www/media
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    volumes_from:
+      - mychichair
+    links:
+      - mychichair:web
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
+
+  mychichair:
+    container_name: mychichair_main
+    restart: always
+    build:
+      context: .
+    command: ./docker/mychichair/docker-entrypoint.sh
+    volumes:
+      - /usr/src/mychichair/static
+      - /var/data/mychichair/media:/usr/src/mychichair/media
+    environment:
+      - DATABASE_URL
+      - DEFAULT_FROM_EMAIL
+      - OPENEXCHANGERATES_API_KEY
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY
+      - DEBUG
+      - ALLOWED_HOSTS
+      - CONTACT_EMAIL
+      - CONTACT_EMAIL_PASSWORD
+      - ADMIN_NAME
+      - ADMIN_EMAIL
+      - POPULATE_DB
+      - SITE_DOMAIN
+    links:
+      - db
+      - redis
+    ports:
+      - 8000:8000
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
+
+  db:
+    container_name: mychichair_db
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/data/postgresql:/var/lib/postgresql/data/
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
+
+  redis:
+    container_name: mychichair_redis
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - /var/data/redis:/data
+    logging:
+      driver: fluentd
+      options:
+        tag: "docker.{{.FullID}}"
